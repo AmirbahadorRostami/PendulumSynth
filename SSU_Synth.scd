@@ -7,7 +7,6 @@
 }).add;
 )
 
-
    //fm synth
 	SynthDef(\fm, {
 		arg freq=500, mRatio=1, cRatio=1,
@@ -31,7 +30,6 @@
 		//modulator/carrier
 		mod = SinOsc.ar(freq * mRatio, mul:freq * mRatio * iEnv);
 		car = SinOsc.ar(freq * cRatio + mod) * env * amp;
-
 		car = Pan2.ar(car, pan);
 
 		//direct out/reverb send
@@ -40,17 +38,12 @@
 	}).add;
 
 
-
-
-
-
-
 //when running in RPI change to Local Address
 (
 NetAddr(\localhost.asString, 5005);
 OSCdef('SSUListener',{
 	arg msg;
-	Synth('funsynth',[pitch: msg[1].postln]);
+	Synth('fm',[freq: msg[1].postln]);
 },'/z_Rot');
 )
 

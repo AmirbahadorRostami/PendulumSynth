@@ -1,9 +1,7 @@
 from time import sleep
-
 import board
 import busio
 import adafruit_mpu6050
-
 import math
 import argparse
 import random
@@ -16,8 +14,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 mpu = adafruit_mpu6050.MPU6050(i2c)
 
 z_ang = 0
-time_interval = 0.1
-
+time_interval = 1
 
 
 parser = argparse.ArgumentParser()

@@ -25,10 +25,24 @@ GxCal=0
 GyCal=0
 GzCal=0
 
-
 z_rotation = 0
 time_interval = 0.1
-Note_Step = 2.85
+
+Note_Step_1 = 2.85
+Note_Step_2 = Note_Step_1 * 2
+Note_Step_3 = Note_Step_1 * 3
+Note_Step_4 = Note_Step_1 * 4
+Note_Step_5 = Note_Step_1 * 5
+Note_Step_6 = Note_Step_1 * 6
+Note_Step_7 = Note_Step_1 * 7 
+Note_Step_8 = Note_Step_1 * 8
+Note_Step_9 = Note_Step_1 * 9
+Note_Step_10 = Note_Step_1 * 10
+Note_Step_11 = Note_Step_1 * 11
+Note_Step_12 = Note_Step_1 * 12
+Note_Step_13 = Note_Step_1 * 13
+Note_Step_14 = Note_Step_1 * 14
+
 
 
 
@@ -155,36 +169,68 @@ time.sleep(1)
 while 1:
 
   GyroData = gyro()
+  AccData = accel()
   
   x_Gyro = round(GyroData[0],2)
   y_Gyro = round(GyroData[1],2)
   z_Gyro = round(GyroData[2],2)  
 
+  x_Acc = round(AccData[0],2)
+  y_Acc = round(AccData[1],2)
+  z_Acc = round(AccData[2],2)
+  
+  #print("X_Acc: " , x_Acc)
+  #print("Y_Acc: " , y_Acc)
+  print("Z_Acc: " , z_Acc)
+    
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval
-  #print(z_rotation)
+  
 
-  if z_rotation >= 0 and z_rotation <= Note_Step:
+"""
+  if (z_rotation >= 0) and (z_rotation <= Note_Step_1) :
       print("Play Note C ")
       print("Z_ang = " + str(z_rotation))
-  elif z_rotation > Note_Step and (z_rotation <= Note_Step * 2):
+  elif (z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2):
       print("Play Note D ")
       print("Z_ang = " + str(z_rotation))
-  elif z_rotation > Note_Step * 2 and (z_rotation <= Note_Step * 3):
+  elif (z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3):
       print("Play Note E ")
       print("Z_ang = " + str(z_rotation))
-  elif z_rotation > Note_Step * 3 and (z_rotation <= Note_Step * 4):
+  elif (z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4):
       print("Play Note F")
       print("Z_ang = " + str(z_rotation))
-  elif z_rotation > Note_Step * 4 and (z_rotation <= Note_Step * 5):
+  elif (z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5):
       print("Play Note G")
       print("Z_ang = " + str(z_rotation))
-  elif z_rotation > Note_Step * 5 and (z_rotation <= Note_Step * 6):
+  elif (z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6):
       print("play Note A")
       print("Z_ang = " + str(z_rotation))
-  elif z_rotation > Note_Step * 6 and (z_rotation <= Note_Step * 7): 
+  elif (z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7): 
       print("play Note B")
+      print("Z_ang = " + str(z_rotation))
+  elif (z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8): 
+      print("play Note C")
+      print("Z_ang = " + str(z_rotation)) 
+  elif (z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9): 
+      print("play Note D")
+      print("Z_ang = " + str(z_rotation))
+  elif (z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10): 
+      print("play Note E")
+      print("Z_ang = " + str(z_rotation))
+  elif (z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11): 
+      print("play Note F")
       print("Z_ang = " + str(z_rotation))   
+  elif (z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12): 
+      print("play Note G")
+      print("Z_ang = " + str(z_rotation))
+  elif (z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13): 
+      print("play Note A")
+      print("Z_ang = " + str(z_rotation))    
+  elif (z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14): 
+      print("play Note A")
+      print("Z_ang = " + str(z_rotation))
+"""
 
 
 

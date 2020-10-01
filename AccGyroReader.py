@@ -2,7 +2,9 @@ import smbus
 import time
 import math
 import RPi.GPIO as gpio
- 
+import argparse
+from pythonosc import udp_client
+
 PWR_M   = 0x6B
 DIV   = 0x19
 CONFIG       = 0x1A
@@ -43,8 +45,8 @@ Note_Step_12 = Note_Step_1 * 12
 Note_Step_13 = Note_Step_1 * 13
 Note_Step_14 = Note_Step_1 * 14
 
-
-
+C_MajorScale = [36,38,40,41,43,45,47]
+trigTresh = 0.1
 
 #MPU Functions
 def InitMPU():
@@ -165,6 +167,15 @@ InitMPU()
 calibrate()
 time.sleep(1)
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--ip", default="127.0.0.1", help="The ip of the OSC server")
+parser.add_argument("--port", type=int, default=5005, help="The port the OSC server is listening on")
+args = parser.parse_args()
+
+client = udp_client.SimpleUDPClient(args.ip, args.port)
+
+
 # Main
 while 1:
 
@@ -178,59 +189,71 @@ while 1:
   x_Acc = round(AccData[0],2)
   y_Acc = round(AccData[1],2)
   z_Acc = round(AccData[2],2)
-  
-  #print("X_Acc: " , x_Acc)
-  #print("Y_Acc: " , y_Acc)
-  print("Z_Acc: " , z_Acc)
-    
+
+  #print("X_Acc: " + x_Acc)
+
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval
-  
+ 
 
-"""
-  if (z_rotation >= 0) and (z_rotation <= Note_Step_1) :
+
+  if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
       print("Play Note C ")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2):
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[0])
+  elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
       print("Play Note D ")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3):
+      if z_Acc > trigTresh :  client.send_message("/z_Rot", C_MajorScale[1])
+  elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3)) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
       print("Play Note E ")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4):
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[2])
+  elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4)) or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
       print("Play Note F")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5):
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[3])
+  elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
       print("Play Note G")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6):
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[4])
+  elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
       print("play Note A")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7): 
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[5])
+  elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7)) or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)): 
       print("play Note B")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8): 
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[6])
+  elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)): 
       print("play Note C")
-      print("Z_ang = " + str(z_rotation)) 
-  elif (z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9): 
+      print("Z_ang = " + str(z_rotation))
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[0]) 
+  elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9)) or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)): 
       print("play Note D")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10): 
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[1])
+  elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)): 
       print("play Note E")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11): 
+      client.send_message("/z_Rot", C_MajorScale[2])
+  elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)): 
       print("play Note F")
-      print("Z_ang = " + str(z_rotation))   
-  elif (z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12): 
+      print("Z_ang = " + str(z_rotation)) 
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[3])  
+  elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)): 
       print("play Note G")
       print("Z_ang = " + str(z_rotation))
-  elif (z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13): 
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[4])
+  elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13)) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)): 
       print("play Note A")
-      print("Z_ang = " + str(z_rotation))    
-  elif (z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14): 
-      print("play Note A")
+      print("Z_ang = " + str(z_rotation))  
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[5])  
+  elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14)) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)): 
+      print("play Note B")
       print("Z_ang = " + str(z_rotation))
-"""
+      if z_Acc > trigTresh : client.send_message("/z_Rot", C_MajorScale[6])
+
 
 
 

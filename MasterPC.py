@@ -20,12 +20,12 @@ MainGalleryRotation = 0
 
 
 def GamaSpace_handler(address, *args):
-    #print(f"{address}: {args}")
-    GamaSpace_Rotation = args
+    print(f"{address}: {args}")
+    GamaSpace_Rotation = args[0]
 
 def MainGallery_handler(address, *args):
-    #print(f"{address}: {args}")
-    MainGalleryRotation = args
+    print(f"{address}: {args}")
+    MainGalleryRotation = args[0]
 
 
 dispatcher = Dispatcher()
@@ -35,13 +35,24 @@ dispatcher.map("/MainGalleryRot", GamaSpace_handler)
 ip = "192.168.0.186"
 port = 3000
 
+
+GammaSpace_SSU = udp_client.SimpleUDPClient("192.168.0.228", 4005)
+MainGallery_SSU = udp_client.SimpleUDPClient("192.168.0.2280", 6005)
+
 # main Function of the loop
 # here constantly check if both values are equal
 async def loop():
     """ Compare the Numbers coming from Raspberry pi"""
-    print("GamaSpaceRotation: ", GamaSpace_Rotation)
-    print("MainGalleryRotation: ", MainGalleryRot)
-    await asyncio.sleep(1)
+    while 1:
+        
+        print("GamaSpaceRotation: ", GamaSpace_Rotation)
+        print("MainGalleryRotation: ", MainGalleryRotation)
+        
+        if GamaSpace_Rotation == MainGalleryRotation :
+            print("were facing the same way")
+            #send a response to both SSU
+
+        await asyncio.sleep(1)
 
 
 async def init_main():

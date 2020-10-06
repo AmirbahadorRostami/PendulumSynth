@@ -175,7 +175,9 @@ parser.add_argument("--ip", default="127.0.0.1", help="The ip of the OSC server"
 parser.add_argument("--port", type=int, default=5005, help="The port the OSC server is listening on")
 args = parser.parse_args()
 
-client = udp_client.SimpleUDPClient(args.ip, args.port)
+client = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
+
+MasterPC = udp_client.SimpleUDPClient("192.168.0.186", 3000)
 
 
 # Main
@@ -197,7 +199,7 @@ while 1:
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval
  
-
+  MasterPC.send_message("/MainGalleryRot",z_rotation)
 
   if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
       print("Play Note C ")

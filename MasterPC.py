@@ -15,13 +15,22 @@ from pythonosc.osc_server import AsyncIOOSCUDPServer
 from pythonosc.dispatcher import Dispatcher
 import asyncio
 
+GamaSpace_Rotation = 0
+MainGalleryRotation = 0
 
-def filter_handler(address, *args):
-    print(f"{address}: {args}")
+
+def GamaSpace_handler(address, *args):
+    #print(f"{address}: {args}")
+    GamaSpace_Rotation = args
+
+def MainGallery_handler(address, *args):
+    #print(f"{address}: {args}")
+    MainGalleryRotation = args
 
 
 dispatcher = Dispatcher()
-dispatcher.map("/rot", filter_handler)
+dispatcher.map("/GamaSpaceRot", GamaSpace_handler)
+dispatcher.map("/MainGalleryRot", GamaSpace_handler)
 
 ip = "192.168.0.186"
 port = 3000
@@ -29,10 +38,10 @@ port = 3000
 # main Function of the loop
 # here constantly check if both values are equal
 async def loop():
-    """ Log the Numbers coming from Raspberry pi"""
-    for i in range(10):
-        print(f"Loop {i}")
-        await asyncio.sleep(1)
+    """ Compare the Numbers coming from Raspberry pi"""
+    print("GamaSpaceRotation: ", GamaSpace_Rotation)
+    print("MainGalleryRotation: ", MainGalleryRot)
+    await asyncio.sleep(1)
 
 
 async def init_main():

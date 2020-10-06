@@ -17,6 +17,7 @@ GYRO_Y  = 0x45
 GYRO_Z  = 0x47
 TEMP = 0x41
 bus = smbus.SMBus(1)
+
 Device_MainGallery = 0x68   # device address
 Device_GammaSpace = 0x69   # device address
 
@@ -193,7 +194,7 @@ while 1:
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval
  
-  MasterPC.send_message("/rot",z_rotation)
+  MasterPC.send_message("/GamaSpaceRot",z_rotation)
 
 
   if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):

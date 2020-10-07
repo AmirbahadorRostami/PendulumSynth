@@ -13,6 +13,7 @@ Your loop needs to at least do an await asyncio.sleep(0) every iteration, otherw
 
 from pythonosc.osc_server import AsyncIOOSCUDPServer
 from pythonosc.dispatcher import Dispatcher
+from pythonosc import udp_client
 import asyncio
 
 GamaSpace_Rotation = 0
@@ -20,24 +21,24 @@ MainGalleryRotation = 0
 
 
 def GamaSpace_handler(address, *args):
-    print(f"{address}: {args}")
-    GamaSpace_Rotation = args[0]
+    global GamaSpace_Rotation
+    GamaSpace_Rotation = round(args[0],2)
 
 def MainGallery_handler(address, *args):
-    print(f"{address}: {args}")
-    MainGalleryRotation = args[0]
+    global MainGalleryRotation
+    MainGalleryRotation = round(args[0],2)
 
 
 dispatcher = Dispatcher()
 dispatcher.map("/GamaSpaceRot", GamaSpace_handler)
-dispatcher.map("/MainGalleryRot", GamaSpace_handler)
+dispatcher.map("/MainGalleryRot", MainGallery_handler)
 
 ip = "192.168.0.186"
 port = 3000
 
 
-GammaSpace_SSU = udp_client.SimpleUDPClient("192.168.0.228", 4005)
-MainGallery_SSU = udp_client.SimpleUDPClient("192.168.0.2280", 6005)
+#GammaSpace_SSU = udp_client.SimpleUDPClient("192.168.0.228", 4005)
+#MainGallery_SSU = udp_client.SimpleUDPClient("192.168.0.2280", 6005)
 
 # main Function of the loop
 # here constantly check if both values are equal
@@ -51,7 +52,7 @@ async def loop():
         if GamaSpace_Rotation == MainGalleryRotation :
             print("were facing the same way")
             #send a response to both SSU
-
+            
         await asyncio.sleep(1)
 
 

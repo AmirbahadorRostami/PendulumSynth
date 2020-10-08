@@ -30,6 +30,8 @@ GyCal=0
 GzCal=0
 
 z_rotation = 0
+x_Movment = 0
+y_Movment = 0
 time_interval = 0.1
 
 Note_Step_1 = 2.85
@@ -194,7 +196,10 @@ while 1:
   y_Acc = round(AccData[1],2)
   z_Acc = round(AccData[2],2)
 
-  #print("X_Acc: " + x_Acc)
+  #x_Movment += x_Acc * time_interval
+  
+  print("X_Movment: " , x_Movment)
+  
 
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval

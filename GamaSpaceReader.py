@@ -80,6 +80,7 @@ def accel():
     #print "AccX="+str(Ax)
     #print "AccY="+str(Ay)
     #print "AccZ="+str(Az)
+
     
     result = [Ax,Ay,Az]
     return result
@@ -164,6 +165,42 @@ def get_x_rotation(x,y,z):
     radians = math.atan2(y, dist(x,z))
     return math.degrees(radians)
 
+def SmoothedACC():
+  a = 0.20
+  n = 10
+  previousTempX = 0.2
+  previousTempY = 0.2
+  previousTempZ = 0.2
+
+  EWMF_X = 0
+  EWMF_Y = 0
+  EWMF_Z = 0
+
+  for x in range of(n):
+    x = readMPU(ACCEL_X)
+    y = readMPU(ACCEL_Y)
+    z = readMPU(ACCEL_Z)
+    
+    Ax = (x/16384.0-AxCal) 
+    Ay = (y/16384.0-AyCal) 
+    Az = (z/16384.0-AzCal)
+
+    EWMF_X = (1-a)*previousTempX + a*Ax
+    previousTempX = EWMF_X
+
+    EWMF_Y = (1-a) * previousTempY + a * Ay
+    previousTempY = EWMF_Y
+
+    EWMF_Z = (1-a) * previousTempZ + a * Az
+    previousTempZ = EWMF_Z 
+
+    result = [EWMF_X,EWMF_Y,EWMF_Z]
+    return result
+
+    time.sleep(.01)
+
+
+
 
 InitMPU()
 calibrate()
@@ -179,17 +216,21 @@ MasterPC = udp_client.SimpleUDPClient("192.168.0.186", 3000)
 while 1:
 
   GyroData = gyro()
-  AccData = accel()
+  #AccData = accel()
   
+  AccDataSmoothed = SmoothedACC()
+
+
   x_Gyro = round(GyroData[0],2)
   y_Gyro = round(GyroData[1],2)
   z_Gyro = round(GyroData[2],2)  
 
-  x_Acc = round(AccData[0],2)
-  y_Acc = round(AccData[1],2)
-  z_Acc = round(AccData[2],2)
+  #x_Acc = round(AccData[0],2)
+  #y_Acc = round(AccData[1],2)
+  #z_Acc = round(AccData[2],2)
 
-  print("z_Acc: ", x_Acc)
+  print("X_Acc: ", AccDataSmoothed[0])
+  print("Y_Acc: ", AccDataSmoothed[1])
 
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval

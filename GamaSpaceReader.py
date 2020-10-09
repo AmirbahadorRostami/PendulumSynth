@@ -48,7 +48,7 @@ Note_Step_13 = Note_Step_1 * 13
 Note_Step_14 = Note_Step_1 * 14
 
 C_MajorScale = [36,38,40,41,43,45,47]
-trigTresh = 0
+trigTresh = 0.2
 
 #MPU Functions
 def InitMPU():
@@ -189,7 +189,7 @@ while 1:
   y_Acc = round(AccData[1],2)
   z_Acc = round(AccData[2],2)
 
-  print("z_Acc: ", z_Acc)
+  print("z_Acc: ", x_Acc)
 
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval

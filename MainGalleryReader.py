@@ -50,7 +50,7 @@ Note_Step_13 = Note_Step_1 * 13
 Note_Step_14 = Note_Step_1 * 14
 
 C_MajorScale = [36,38,40,41,43,45,47]
-trigTresh = 0.1
+trigTresh = 0.2
 
 #MPU Functions
 def InitMPU():
@@ -79,10 +79,6 @@ def accel():
     Ay = (y/16384.0-AyCal) 
     Az = (z/16384.0-AzCal)
     
-    #print "AccX="+str(Ax)
-    #print "AccY="+str(Ay)
-    #print "AccZ="+str(Az)
-    
     result = [Ax,Ay,Az]
     return result
 
@@ -100,10 +96,6 @@ def gyro():
       Gx = x/131.0 - GxCal
       Gy = y/131.0 - GyCal
       Gz = z/131.0 - GzCal
-
-      #print "GyroX="+str(Gx)
-      #print "GyroY="+str(Gy)
-      #print "GyroZ="+str(Gz)
 
       result = [Gx,Gy,Gz]
       return result
@@ -167,6 +159,7 @@ def get_x_rotation(x,y,z):
     return math.degrees(radians)
 
 
+
 InitMPU()
 calibrate()
 time.sleep(1)
@@ -196,9 +189,7 @@ while 1:
   y_Acc = round(AccData[1],2)
   z_Acc = round(AccData[2],2)
 
-  #x_Movment += x_Acc * time_interval
-  
-  print("X_Movment: " , x_Movment)
+  #Filter Data EWMA
 
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval

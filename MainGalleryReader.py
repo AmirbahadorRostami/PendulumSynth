@@ -164,6 +164,7 @@ def rollingAvgACC():
     array_meanX = array('f', [])
     array_meanY = array('f', [])
     array_meanZ = array('f', [])
+    result = []
     
     for h in range(n):
         array_meanX.append(0.2)
@@ -198,12 +199,10 @@ def rollingAvgACC():
         meanX = meanX/n
         meanY = meanY/n
         meanZ = meanZ/n
+
+        result = [meanX,meanY,meanZ]
+    return result
     
-
-
-
-
-
 
 
 

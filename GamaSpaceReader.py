@@ -176,7 +176,7 @@ def SmoothedACC():
   EWMF_Y = 0
   EWMF_Z = 0
 
-  for x in range of(n):
+  for x in range (n):
     x = readMPU(ACCEL_X)
     y = readMPU(ACCEL_Y)
     z = readMPU(ACCEL_Z)

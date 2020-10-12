@@ -159,11 +159,58 @@ def get_x_rotation(x,y,z):
     return math.degrees(radians)
 
 
+def rollingAvgACC():
+    n = 5
+    array_meanX = array('f', [])
+    array_meanY = array('f', [])
+    array_meanZ = array('f', [])
+    
+    for h in range(n):
+        array_meanX.append(0.2)
+        array_meanY.append(0.2)
+        array_meanZ.append(0.2)
+
+    for x in range(n):
+        x = readMPU(ACCEL_X)
+        y = readMPU(ACCEL_Y)
+        z = readMPU(ACCEL_Z)
+
+        tempAccX = (x/16384.0-AxCal)
+        tempAccY = (y/16384.0-AyCal) 
+        tempAccZ = (z/16384.0-AzCal)
+
+        array_meanX[n] = tempAccX
+        array_meanY[n] = tempAccY
+        array_meanZ[n] = tempAccZ
+
+        for h in range(n):
+            array_meanX = array_meanX[(h+1)]
+            array_meanY = array_meanY[(h+1)]
+            array_meanZ = array_meanZ[(h+1)]
+        
+        meanX = 0
+        meanY = 0
+        meanZ = 0
+        for h in range(n):
+            meanX = array_meanX[h] + meanX
+            meanY = array_meanY[h] + meanY
+            meanZ = array_meanZ[h] + meanZ
+        meanX = meanX/n
+        meanY = meanY/n
+        meanZ = meanZ/n
+    
+
+
+
+
+
+
+
 
 InitMPU()
 calibrate()
-time.sleep(1)
 
+time.sleep(1)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--ip", default="127.0.0.1", help="The ip of the OSC server")

@@ -3,7 +3,9 @@ import time
 import math
 import RPi.GPIO as gpio
 import argparse
+import numpy as np
 from pythonosc import udp_client
+
 
 PWR_M   = 0x6B
 DIV   = 0x19
@@ -159,65 +161,28 @@ def get_x_rotation(x,y,z):
     return math.degrees(radians)
 
 
-def rollingAvgACC():
-    n = 5
-    
-    array_meanX = array('f', [])
-    array_meanY = array('f', [])
-    array_meanZ = array('f', [])
-    result = []
-    # Initialise the array with 5 values.
-    for h in range(n):
-        array_meanX.append(0.2)
-        array_meanY.append(0.2)
-        array_meanZ.append(0.2)
+def rolling_mean(arr, val , n = 3):
+    arr.append(val)
+    if len(arr) > n:
+        arr = arr[1:]
+    return arr,np.mean(np.array(arr))
 
-    for x in range(n):
-        #get some Data
-        x = readMPU(ACCEL_X)
-        y = readMPU(ACCEL_Y)
-        z = readMPU(ACCEL_Z)
 
-        tempAccX = (x/16384.0-AxCal)
-        tempAccY = (y/16384.0-AyCal) 
-        tempAccZ = (z/16384.0-AzCal)
 
-        #put at the end of the array
-        array_meanX[n] = tempAccX
-        array_meanY[n] = tempAccY
-        array_meanZ[n] = tempAccZ
-
-        #shift array Values to the Left
-        for h in range(n):
-            array_meanX = array_meanX[(h+1)]
-            array_meanY = array_meanY[(h+1)]
-            array_meanZ = array_meanZ[(h+1)]
-        
-        # Calculate the mean, no weights.
-        meanX = 0
-        meanY = 0
-        meanZ = 0
-        for h in range(n):
-            meanX = array_meanX[h] + meanX
-            meanY = array_meanY[h] + meanY
-            meanZ = array_meanZ[h] + meanZ
-        meanX = meanX/n
-        meanY = meanY/n
-        meanZ = meanZ/n
-
-        result = [meanX,meanY,meanZ] # this has to be here?
-    return result
     
 
 InitMPU()
 calibrate()
 
-time.sleep(1)
-
 
 client = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
 MasterPC = udp_client.SimpleUDPClient("192.168.0.186", 3000)
 
+X_ACC_Buff = []
+Y_ACC_Buff = []
+Z_ACC_Buff = []
+
+time.sleep(1)
 
 # Main
 while 1:
@@ -225,22 +190,19 @@ while 1:
   GyroData = gyro()
   AccData = accel()
   
-
   x_Gyro = round(GyroData[0],2)
   y_Gyro = round(GyroData[1],2)
   z_Gyro = round(GyroData[2],2)  
 
-  x_Acc = round(AccData[0],2)
-  y_Acc = round(AccData[1],2)
-  z_Acc = round(AccData[2],2)
+  x_Acc = AccData[0] #round(AccData[0],2)
+  y_Acc = AccData[1] #round(AccData[1],2)
+  z_Acc = AccData[2] #round(AccData[2],2)
 
-  avg_ACC = (x_Acc + y_Acc) / 2
 
-  #ACCRollingAvg = rollingAvgACC()
-  #Filter Data EWMA
-  #print("Acc_X: ",ACCRollingAvg[0])
-  #print("Acc_Y: ",ACCRollingAvg[1])
-  #print("Acc_Z: ",ACCRollingAvg[2])
+  X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc)
+  Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc)
+  Z_ACC_Buff , Y_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc)
+
 
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval

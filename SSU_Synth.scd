@@ -40,8 +40,8 @@ SynthDef(\vosc, {
 
 x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4]);
 
-x.set(\freq,100)
-x.set(\amp ,0.1)
+x.set(\freq,200)
+x.set(\amp ,0.5)
 x.free;
 
 //when running in RPI change to Local Address

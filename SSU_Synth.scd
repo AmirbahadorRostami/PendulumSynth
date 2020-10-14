@@ -49,8 +49,18 @@ x.free;
 NetAddr(\localhost.asString, 5005);
 OSCdef('SSUListener',{
 	arg msg;
-	x.set(\freq: msg[1].midicps);
-	x.set(\amp: msg[2]);
+	var oldFreq,oldAmp;
+
+	if(oldFreq != msg[1],
+		x.set(\freq:, msg[1].midicps);
+	);
+
+	if(oldAmp != msg[2],
+		x.set(\amp, msg[2]);
+	);
+
+	oldFreq = msg[1];
+	oldAmp = msg[2]
 },'/SC_Control');
 )
 

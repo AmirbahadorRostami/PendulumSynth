@@ -194,11 +194,11 @@ while 1:
   y_Gyro = round(GyroData[1],2)
   z_Gyro = round(GyroData[2],2)  
 
-  x_Acc = round(AccData[0],2)
-  y_Acc = round(AccData[1],2)
-  z_Acc = round(AccData[2],2)
+  x_Acc = AccData[0]
+  y_Acc = AccData[1]
+  z_Acc = AccData[2]
 
-  avg_ACC = abs((x_Acc + y_Acc) / 2)
+  avg_ACC = round(abs((x_Acc + y_Acc) / 2),2)
 
   print("Avg_ACC: ", avg_ACC)
 

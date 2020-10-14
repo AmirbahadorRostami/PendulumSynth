@@ -161,7 +161,7 @@ def get_x_rotation(x,y,z):
     return math.degrees(radians)
 
 
-def rolling_mean(arr, val , n = 3):
+def rolling_mean(arr, val , n = 5):
     arr.append(val)
     if len(arr) > n:
         arr = arr[1:]
@@ -200,12 +200,16 @@ while 1:
 
   avg_ACC = round(abs((x_Acc + y_Acc) / 2),2)
 
-  print("Avg_ACC: ", avg_ACC)
+  print("X_ACC: ", x_Acc)
 
 
-  #X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc)
-  #Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc)
+  X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc)
+  Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc)
   #Z_ACC_Buff , Y_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc)
+  print("X_ACC_Buff: ", X_ACC_Buff)
+  print("X_ACC_Smooth: " , X_Acc_smooth)
+  
+  
 
 
   time.sleep(time_interval)

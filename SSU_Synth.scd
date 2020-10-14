@@ -52,7 +52,7 @@ OSCdef('SSUListener',{
 	var oldFreq,oldAmp;
 
 	if(oldFreq != msg[1],
-		x.set(\freq:, msg[1].midicps);
+		x.set(\freq, msg[1].midicps);
 	);
 
 	if(oldAmp != msg[2],

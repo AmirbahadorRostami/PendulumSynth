@@ -198,15 +198,15 @@ while 1:
   y_Acc = AccData[1]
   z_Acc = AccData[2]
 
-  X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc)
-  Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc)
+  X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,3)
+  Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,3)
   #Z_ACC_Buff , Y_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc)
   #print("X_ACC_Buff: ", X_ACC_Buff)
   #print("X_ACC_Smooth: " , X_Acc_smooth)
 
   avg_ACC = round(abs((X_Acc_smooth + Y_Acc_smooth) / 2), 2)
 
-  print(avg_ACC)
+  print(round(abs(X_Acc_smooth),2))
   
 
   time.sleep(time_interval)

@@ -75,9 +75,6 @@ SynthDef.new(\vosc, {
 )
 
 
-
-
-
 //when running in RPI change to Local Address
 (
 NetAddr(\localhost.asString, 5005);

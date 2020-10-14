@@ -204,20 +204,13 @@ def rollingAvgACC():
     return result
     
 
-
-
 InitMPU()
 calibrate()
 
 time.sleep(1)
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--ip", default="127.0.0.1", help="The ip of the OSC server")
-parser.add_argument("--port", type=int, default=5005, help="The port the OSC server is listening on")
-args = parser.parse_args()
 
 client = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
-
 MasterPC = udp_client.SimpleUDPClient("192.168.0.186", 3000)
 
 
@@ -227,6 +220,9 @@ while 1:
   GyroData = gyro()
   AccData = accel()
   
+  ACCRollingAvg = rollingAvgACC()
+
+
   x_Gyro = round(GyroData[0],2)
   y_Gyro = round(GyroData[1],2)
   z_Gyro = round(GyroData[2],2)  
@@ -236,6 +232,9 @@ while 1:
   z_Acc = round(AccData[2],2)
 
   #Filter Data EWMA
+  print("Acc_X: ",ACCRollingAvg[0])
+  print("Acc_Y: ",ACCRollingAvg[1])
+  print("Acc_Z: ",ACCRollingAvg[2])
 
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval

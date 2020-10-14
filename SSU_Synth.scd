@@ -1,6 +1,5 @@
 s.boot;
 
-
    //fm synth
 	SynthDef(\fm, {
 		arg freq=500, mRatio=1, cRatio=1,
@@ -36,12 +35,63 @@ s.boot;
 
 
 
+(
+~wt = Array.fill(4,{
+	var numSegs = rrand(4,20);
+	Env(
+		[0]++
+		(({rrand(0.0,1.0)}!(numSegs-1)) * [1,-1]).scramble
+		++[0],
+		{exprand(1,20)}!numSegs,
+		{rrand(-20,20)}!numSegs
+	).asSignal(1024).asWavetable;
+});
+)
+
+(
+~buf = Buffer.allocConsecutive(4,s,2048);
+~buf.do({
+	arg buf, i;
+	buf.loadCollection(~wt[i]);
+});
+)
+
+
+(
+SynthDef.new(\vosc, {
+	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.2;
+	var sig, bufpos, detuneSig;
+
+	detuneSig = LFNoise0.kr(0.2!8).bipolar(0.2).midiratio; //couresFX
+
+	bufpos = buf + LFNoise1.kr(0.5).range(0,numBufs-1);
+	sig = VOsc.ar(bufpos,freq * detuneSig);
+
+	sig = Splay.ar(sig);
+	sig = LeakDC.ar(sig) * amp;
+
+	Out.ar(out,sig);
+}).add;
+)
+
+
+
+
+
 //when running in RPI change to Local Address
 (
 NetAddr(\localhost.asString, 5005);
 OSCdef('SSUListener',{
 	arg msg;
 	Synth('fm',[freq: msg[1].midicps]);
+},'/z_Rot');
+)
+
+(
+NetAddr(\localhost.asString, 5005);
+OSCdef('SSUListener',{
+	arg msg;
+	Synth('\vosc',[freq: msg[1].midicps]);
 },'/z_Rot');
 )
 

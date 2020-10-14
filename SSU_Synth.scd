@@ -95,4 +95,5 @@ OSCdef('SSUListener',{
 (
   n = NetAddr(\localhost.asString, 5005);
   o = OSCFunc({|msg, time, from, port| msg.postln}, '/z_Rot', nil, 5005);
+  z = OSCFunc({|msg, time, from, port| msg.postln}, '/avg_ACC', nil, 5005);
 )

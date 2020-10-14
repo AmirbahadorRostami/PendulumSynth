@@ -2,7 +2,10 @@ import smbus
 import time
 import math
 import RPi.GPIO as gpio
+import argparse
+import numpy as np
 from pythonosc import udp_client
+
 
 PWR_M   = 0x6B
 DIV   = 0x19
@@ -17,7 +20,6 @@ GYRO_Y  = 0x45
 GYRO_Z  = 0x47
 TEMP = 0x41
 bus = smbus.SMBus(1)
-
 Device_MainGallery = 0x68   # device address
 Device_GammaSpace = 0x69   # device address
 
@@ -30,6 +32,8 @@ GyCal=0
 GzCal=0
 
 z_rotation = 0
+x_Movment = 0
+y_Movment = 0
 time_interval = 0.1
 
 Note_Step_1 = 2.85
@@ -77,11 +81,6 @@ def accel():
     Ay = (y/16384.0-AyCal) 
     Az = (z/16384.0-AzCal)
     
-    #print "AccX="+str(Ax)
-    #print "AccY="+str(Ay)
-    #print "AccZ="+str(Az)
-
-    
     result = [Ax,Ay,Az]
     return result
 
@@ -99,10 +98,6 @@ def gyro():
       Gx = x/131.0 - GxCal
       Gy = y/131.0 - GyCal
       Gz = z/131.0 - GzCal
-
-      #print "GyroX="+str(Gx)
-      #print "GyroY="+str(Gy)
-      #print "GyroZ="+str(Gz)
 
       result = [Gx,Gy,Gz]
       return result
@@ -165,179 +160,184 @@ def get_x_rotation(x,y,z):
     radians = math.atan2(y, dist(x,z))
     return math.degrees(radians)
 
-def SmoothedACC():
-  a = 0.20
-  n = 10
-  previousTempX = 0.2
-  previousTempY = 0.2
-  previousTempZ = 0.2
 
-  EWMF_X = 0
-  EWMF_Y = 0
-  EWMF_Z = 0
+def rolling_mean(arr, val , n = 5):
+    arr.append(val)
+    if len(arr) > n:
+        arr = arr[1:]
+    return arr,np.mean(np.array(arr))
 
-  for x in range (n):
-    x = readMPU(ACCEL_X)
-    y = readMPU(ACCEL_Y)
-    z = readMPU(ACCEL_Z)
+
+
     
-    Ax = (x/16384.0-AxCal) 
-    Ay = (y/16384.0-AyCal) 
-    Az = (z/16384.0-AzCal)
-
-    EWMF_X = (1-a)*previousTempX + a*Ax
-    previousTempX = EWMF_X
-
-    EWMF_Y = (1-a) * previousTempY + a * Ay
-    previousTempY = EWMF_Y
-
-    EWMF_Z = (1-a) * previousTempZ + a * Az
-    previousTempZ = EWMF_Z 
-
-    result = [EWMF_X,EWMF_Y,EWMF_Z]
-    return result
-
-    time.sleep(.01)
-
-
-
 
 InitMPU()
 calibrate()
-time.sleep(1)
 
-#SuperCollider
-client = udp_client.SimpleUDPClient("127.0.0.1", 5005)
 
-#MasterPC
+client = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
 MasterPC = udp_client.SimpleUDPClient("192.168.0.186", 3000)
+
+X_ACC_Buff = []
+Y_ACC_Buff = []
+Z_ACC_Buff = []
+
+time.sleep(1)
 
 # Main
 while 1:
 
   GyroData = gyro()
-  #AccData = accel()
+  AccData = accel()
   
-  AccDataSmoothed = SmoothedACC()
-
-
   x_Gyro = round(GyroData[0],2)
   y_Gyro = round(GyroData[1],2)
   z_Gyro = round(GyroData[2],2)  
 
-  #x_Acc = round(AccData[0],2)
-  #y_Acc = round(AccData[1],2)
-  #z_Acc = round(AccData[2],2)
+  x_Acc = AccData[0]
+  y_Acc = AccData[1]
+  z_Acc = AccData[2]
 
-  print("X_Acc: ", AccDataSmoothed[0])
-  print("Y_Acc: ", AccDataSmoothed[1])
+  X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,3)
+  Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,3)
+  #Z_ACC_Buff , Y_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc)
+  #print("X_ACC_Buff: ", X_ACC_Buff)
+  #print("X_ACC_Smooth: " , X_Acc_smooth)
+
+  avg_ACC = round(abs((X_Acc_smooth + Y_Acc_smooth) / 2), 2)
+
+  print(round(abs(X_Acc_smooth),2))
+  
 
   time.sleep(time_interval)
   z_rotation += z_Gyro * time_interval
  
-  MasterPC.send_message("/GamaSpaceRot",z_rotation)
-
+  MasterPC.send_message("/MainGalleryRot",z_rotation)
 
   if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
       
       #print("Play Note C ")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[0])
-  
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) : 
+      SC_Control = [C_MajorScale[0] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+
+
   elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
       
       #print("Play Note D ")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh :  
-          client.send_message("/z_Rot", C_MajorScale[1])
+      SC_Control = [ C_MajorScale[1] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :   
+          #client.send_message("/z_Rot", C_MajorScale[1])
 
   elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3)) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
-      
       #print("Play Note E ")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[2])
-  
+      SC_Control = [C_MajorScale[2] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[2])
+
   elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4)) or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
-      
+
       #print("Play Note F")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[3])
+      SC_Control = [C_MajorScale[3] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[3])
   
   elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
-      
+
       #print("Play Note G")
       #print("Z_ang = " + str(z_rotation))
-
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[4])
+      SC_Control = [C_MajorScale[4] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[4])
   
   elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
       
       #print("play Note A")
       #print("Z_ang = " + str(z_rotation))
-
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[5])
+      SC_Control = [C_MajorScale[5] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[5])
   
-  elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7)) or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)): 
-      
+  elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7)) or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)):
+
       #print("play Note B")
       #print("Z_ang = " + str(z_rotation))
-
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[6])
+      SC_Control = [C_MajorScale[6] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[6])
   
-  elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)): 
-      
+  elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)):
+
       #print("play Note C")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[0]) 
+      SC_Control = [C_MajorScale[0] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[0]) 
   
-  elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9)) or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)): 
-      
+  elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9)) or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
+
       #print("play Note D")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[1])
+      SC_Control = [C_MajorScale[1] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[1])
   
-  elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)): 
-      
+  elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)):
+
       #print("play Note E")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[2])
+      SC_Control = [C_MajorScale[2] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[2])
   
-  elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)): 
-      
+  elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)):
+
       #print("play Note F")
-      #print("Z_ang = " + str(z_rotation)) 
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[3])  
+      #print("Z_ang = " + str(z_rotation))
+      SC_Control = [C_MajorScale[3] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[3])  
   
-  elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)): 
-      
+  elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):
+
       #print("play Note G")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[4])
-  
-  elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13)) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)): 
-      
+      SC_Control = [C_MajorScale[4] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[4])
+
+  elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13)) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)):
+
       #print("play Note A")
       #print("Z_ang = " + str(z_rotation))  
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[5])  
-  
-  elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14)) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)): 
-      
+      SC_Control = [C_MajorScale[5] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[5])  
+
+  elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14)) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)):
+
       #print("play Note B")
       #print("Z_ang = " + str(z_rotation))
-      if z_Acc > trigTresh : 
-          client.send_message("/z_Rot", C_MajorScale[6])
+      SC_Control = [C_MajorScale[6] , avg_ACC ]
+      client.send_message("/SC_Control", SC_Control)
+      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
+          #client.send_message("/z_Rot", C_MajorScale[6])
 
 
 

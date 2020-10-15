@@ -66,3 +66,12 @@ async def init_main():
 
 
 asyncio.run(init_main())
+
+
+
+
+"""
+map Amplitude to Z_Acc or Y_ACC and X_ACC
+based on the displacment the sound will go up
+
+"""

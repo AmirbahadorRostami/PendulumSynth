@@ -24,15 +24,18 @@ s.boot;
 
 (
 SynthDef(\vosc, {
-	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.0;
+	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.0 , gate = 0;
 	var sig, bufpos, detuneSig , env;
+
+	env = EnvGen.kr(Env.asr,gate);
+
 	detuneSig = LFNoise0.kr(0.2!8).bipolar(0.2).midiratio; //couresFX
 
 	bufpos = buf + LFNoise1.kr(0.5).range(0,numBufs-1);
 	sig = VOsc.ar(bufpos,freq * detuneSig);
 
 	sig = Splay.ar(sig);
-	sig = LeakDC.ar(sig) * amp;
+	sig = LeakDC.ar(sig) * amp * env;
 
 	Out.ar(out,sig);
 }).add;
@@ -40,8 +43,10 @@ SynthDef(\vosc, {
 
 x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4]);
 
-x.set(\freq,200)
+x.set(\freq,100)
 x.set(\amp ,0.5)
+x.set(\gate, 1)
+x.set(\gate, 0)
 x.free;
 
 //when running in RPI change to Local Address

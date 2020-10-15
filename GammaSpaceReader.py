@@ -207,17 +207,15 @@ while 1:
   #print("X_ACC_Smooth: " , round(X_Acc_smooth,3))
   #print("Y_ACC_Smooth: " , round(Y_Acc_smooth,2))
   #print("Z_ACC_Smooth: ", Z_Acc_smooth)
-
   #avg_ACC = 0#round(abs((X_Acc_smooth + Y_Acc_smooth) / 2), 2)
-  
-  Y_ACC = abs(round(Y_Acc_smooth,2))
 
 
   time.sleep(time_interval)
+
+  Y_ACC = abs(round(Y_Acc_smooth,2))
   z_rotation += z_Gyro * time_interval
   
- 
-  MasterPC.send_message("/MainGalleryRot",z_rotation)
+  MasterPC.send_message("/MainGalleryRot", z_rotation)
 
   if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
       
@@ -226,7 +224,6 @@ while 1:
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) : 
       SC_Control = [C_MajorScale[0] , Y_ACC ]
       client.send_message("/SC_Control", SC_Control)
-
 
   elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
       
@@ -339,6 +336,8 @@ while 1:
 
       #print("play Note B")
       #print("Z_ang = " + str(z_rotation))
+
+      # if above trigger threshold and if there is new value
       SC_Control = [C_MajorScale[6] , Y_ACC ]
       client.send_message("/SC_Control", SC_Control)
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  

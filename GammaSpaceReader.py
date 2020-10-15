@@ -300,7 +300,7 @@ while 1:
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [C_MajorScale[3] , Y_ACC ]
 
-      if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control):  
+      if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
 
   
   elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):

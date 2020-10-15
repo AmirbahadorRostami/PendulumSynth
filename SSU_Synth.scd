@@ -24,10 +24,10 @@ s.boot;
 
 (
 SynthDef(\vosc, {
-	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.0 , gate = 0;
+	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.1 , gate = 0;
 	var sig, bufpos, detuneSig , env;
 
-	env = EnvGen.kr(Env.asr,gate);
+	env = EnvGen.kr(Env.asr(0.1),gate);
 
 	detuneSig = LFNoise0.kr(0.2!8).bipolar(0.2).midiratio; //couresFX
 
@@ -58,14 +58,20 @@ OSCdef('SSUListener',{
 
 	if(oldFreq != msg[1],
 		x.set(\freq, msg[1].midicps);
+		x.set(\gate,1);,
+		x.set(\gate,0);
 	);
 
 	if(oldAmp != msg[2],
 		x.set(\amp, msg[2]);
+		x.set(\gate,1);,
+		x.set(\gate,0);
 	);
 
 	oldFreq = msg[1];
-	oldAmp = msg[2]
+	oldAmp = msg[2];
+
+
 },'/SC_Control');
 )
 

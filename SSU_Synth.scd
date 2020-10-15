@@ -2,6 +2,7 @@ s.boot;
 s.scope;
 s.meter;
 s.freqscope;
+
 (
 ~wt = Array.fill(4,{
 	var numSegs = rrand(4,20);
@@ -26,7 +27,7 @@ s.freqscope;
 
 (
 SynthDef(\vosc, {
-	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.5 , gate = 1, filterFreq = 100;
+	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.5 , gate = 1, filterFreq = 10000;
 	var sig, bufpos, detuneSig , env;
 
 	env = EnvGen.kr(Env.asr(0.5),gate);
@@ -45,11 +46,11 @@ SynthDef(\vosc, {
 
 x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4]);
 
-x.set(\freq,100)
-x.set(\amp ,0.5)
+x.set(\freq,1000)
+x.set(\amp ,1)
 x.set(\gate, 1)
 x.set(\gate, 0)
-x.set(\filterFreq, 500)
+x.set(\filterFreq, 100)
 x.free;
 
 s.freeAll;
@@ -61,10 +62,10 @@ OSCdef('SSUListener',{
 	arg msg;
 	var oldFreq,oldAmp;
 
-	if(oldFreq != msg[1] && oldAmp != msg[2],
-		x.set(\freq, msg[1].midicps);
-		x.set(\filterFreq, msg[2] * 1000);
-	);
+	//if(oldFreq != msg[1] && oldAmp != msg[2],
+	x.set(\freq, msg[1].midicps);
+	x.set(\filterFreq, msg[2] * 1000);
+	//);
 
 	oldFreq = msg[1];
 	oldAmp = msg[2];

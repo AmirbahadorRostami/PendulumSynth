@@ -84,7 +84,7 @@ def accel():
     result = [Ax,Ay,Az]
     return result
 
-    time.sleep(.01)
+    time.sleep(time_interval)
  
 def gyro():
       global GxCal
@@ -185,11 +185,11 @@ while 1:
   y_Acc = AccData[1]
   z_Acc = AccData[2]
   
-  #print(y_Acc)
+  #print(z_Acc)
 
   #X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,7)
   Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,7)
-  #Z_ACC_Buff , Z_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc,5)
+  #Z_ACC_Buff , Z_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc,7)
   #print("X_ACC_Buff: ", X_ACC_Buff)
   #print("X_ACC_Smooth: " , round(X_Acc_smooth,3))
   #print("Y_ACC_Smooth: " , round(Y_Acc_smooth,2))
@@ -201,6 +201,7 @@ while 1:
 
   Y_ACC = abs(round(Y_Acc_smooth,2))
   z_rotation += z_Gyro * time_interval
+  print("this is Y_ACC", Y_ACC)
   
   MasterPC.send_message("/MainGalleryRot", z_rotation)
 

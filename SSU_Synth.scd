@@ -1,5 +1,7 @@
 s.boot;
-
+s.scope;
+s.meter;
+s.freqscope;
 (
 ~wt = Array.fill(4,{
 	var numSegs = rrand(4,20);
@@ -24,16 +26,16 @@ s.boot;
 
 (
 SynthDef(\vosc, {
-	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.1 , gate = 0;
+	arg out = 0, buf = 0, numBufs = 2, freq = 300, amp = 0.5 , gate = 1, filterFreq = 100;
 	var sig, bufpos, detuneSig , env;
 
-	env = EnvGen.kr(Env.asr(0.1),gate);
+	env = EnvGen.kr(Env.asr(0.5),gate);
 
 	detuneSig = LFNoise0.kr(0.2!8).bipolar(0.2).midiratio; //couresFX
 
 	bufpos = buf + LFNoise1.kr(0.5).range(0,numBufs-1);
 	sig = VOsc.ar(bufpos,freq * detuneSig);
-
+	sig = LPF.ar(sig,filterFreq);
 	sig = Splay.ar(sig);
 	sig = LeakDC.ar(sig) * amp * env;
 
@@ -47,7 +49,10 @@ x.set(\freq,100)
 x.set(\amp ,0.5)
 x.set(\gate, 1)
 x.set(\gate, 0)
+x.set(\filterFreq, 500)
 x.free;
+
+s.freeAll;
 
 //when running in RPI change to Local Address
 (
@@ -56,21 +61,13 @@ OSCdef('SSUListener',{
 	arg msg;
 	var oldFreq,oldAmp;
 
-	if(oldFreq != msg[1],
+	if(oldFreq != msg[1] && oldAmp != msg[2],
 		x.set(\freq, msg[1].midicps);
-		x.set(\gate,1);,
-		x.set(\gate,0);
-	);
-
-	if(oldAmp != msg[2],
-		x.set(\amp, msg[2]);
-		x.set(\gate,1);,
-		x.set(\gate,0);
+		x.set(\filterFreq, msg[2] * 1000);
 	);
 
 	oldFreq = msg[1];
 	oldAmp = msg[2];
-
 
 },'/SC_Control');
 )

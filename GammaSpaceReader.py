@@ -40,7 +40,7 @@ Note_Step_13 = Note_Step_1 * 13
 Note_Step_14 = Note_Step_1 * 14
 
 C_MajorScale = [36,38,40,41,43,45,47]
-trigTresh = 0.1
+trigTresh = 0.03
 
 PWR_M   = 0x6B
 DIV   = 0x19
@@ -106,7 +106,7 @@ def gyro():
       result = [Gx,Gy,Gz]
       return result
       
-      time.sleep(.01)
+      time.sleep(time_interval)
 
 def calibrate():
 
@@ -189,23 +189,25 @@ while 1:
   y_Acc = AccData[1]
   z_Acc = AccData[2]
   
-  #print(z_Acc)
+  #print("Z_ACC ", z_Acc)
+  #print("Y_ACC ", y_Acc)
+  #print("X_ACC ", x_Acc)
 
-  #X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,7)
-  Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,7)
+  X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,3)
+  #Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,7)
   #Z_ACC_Buff , Z_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc,7)
   #print("X_ACC_Buff: ", X_ACC_Buff)
-  #print("X_ACC_Smooth: " , round(X_Acc_smooth,3))
+  #print("X_ACC_Smooth: " , round(X_Acc_smooth,2))
   #print("Y_ACC_Smooth: " , round(Y_Acc_smooth,2))
-  #print("Z_ACC_Smooth: ", Z_Acc_smooth)
+  #print("Z_ACC_Smooth: ", abs(round(Z_Acc_smooth,2)))
   #avg_ACC = 0#round(abs((X_Acc_smooth + Y_Acc_smooth) / 2), 2)
 
 
   time.sleep(time_interval)
 
-  Y_ACC = abs(round(Y_Acc_smooth,2))
+  Y_ACC = abs(round(X_Acc_smooth,2)) #change the varible name to X_ACC
   z_rotation += z_Gyro * time_interval
-  print("this is Y_ACC", Y_ACC)
+  print("this is X_ACC", Y_ACC)
   
   MasterPC.send_message("/MainGalleryRot", z_rotation)
 

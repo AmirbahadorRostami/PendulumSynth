@@ -36,7 +36,9 @@ SynthDef(\vosc, {
 
 	bufpos = buf + LFNoise1.kr(0.5).range(0,numBufs-1);
 	sig = VOsc.ar(bufpos,freq * detuneSig);
-	sig = LPF.ar(sig,filterFreq);
+
+	sig = LPF.ar(sig,VarLag.kr(filterFreq , 0.1 , Env.shapeNumber(\lin)));
+
 	sig = Splay.ar(sig);
 	sig = LeakDC.ar(sig) * amp * env;
 
@@ -46,11 +48,11 @@ SynthDef(\vosc, {
 
 x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4]);
 
-x.set(\freq,1000)
+x.set(\freq,100)
 x.set(\amp ,1)
 x.set(\gate, 1)
 x.set(\gate, 0)
-x.set(\filterFreq, 100)
+x.set(\filterFreq, 200)
 x.free;
 
 s.freeAll;

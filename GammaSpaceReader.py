@@ -7,19 +7,7 @@ import numpy as np
 from pythonosc import udp_client
 
 
-PWR_M   = 0x6B
-DIV   = 0x19
-CONFIG       = 0x1A
-GYRO_CONFIG  = 0x1B
-INT_EN   = 0x38
-ACCEL_X = 0x3B
-ACCEL_Y = 0x3D
-ACCEL_Z = 0x3F
-GYRO_X  = 0x43
-GYRO_Y  = 0x45
-GYRO_Z  = 0x47
-TEMP = 0x41
-bus = smbus.SMBus(1)
+
 Device_MainGallery = 0x68   # device address
 Device_GammaSpace = 0x69   # device address
 
@@ -53,6 +41,22 @@ Note_Step_14 = Note_Step_1 * 14
 
 C_MajorScale = [36,38,40,41,43,45,47]
 trigTresh = 0.1
+
+PWR_M   = 0x6B
+DIV   = 0x19
+CONFIG       = 0x1A
+GYRO_CONFIG  = 0x1B
+INT_EN   = 0x38
+ACCEL_X = 0x3B
+ACCEL_Y = 0x3D
+ACCEL_Z = 0x3F
+GYRO_X  = 0x43
+GYRO_Y  = 0x45
+GYRO_Z  = 0x47
+TEMP = 0x41
+bus = smbus.SMBus(1)
+
+
 
 #MPU Functions
 def InitMPU():

@@ -21,7 +21,6 @@ GYRO_Z  = 0x47
 TEMP = 0x41
 bus = smbus.SMBus(1)
 Device_MainGallery = 0x68   # device address
-Device_GammaSpace = 0x69   # device address
 
 
 AxCal=0

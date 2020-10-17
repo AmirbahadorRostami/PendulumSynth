@@ -56,8 +56,6 @@ GYRO_Z  = 0x47
 TEMP = 0x41
 bus = smbus.SMBus(1)
 
-
-
 #MPU Functions
 def InitMPU():
     bus.write_byte_data(Device_GammaSpace, DIV, 7)
@@ -161,7 +159,6 @@ def rolling_mean(arr, val , n = 5):
 
 
 
-
 InitMPU()
 calibrate()
 
@@ -200,16 +197,21 @@ while 1:
   #print("X_ACC_Smooth: " , round(X_Acc_smooth,2))
   #print("Y_ACC_Smooth: " , round(Y_Acc_smooth,2))
   #print("Z_ACC_Smooth: ", abs(round(Z_Acc_smooth,2)))
-  #avg_ACC = 0#round(abs((X_Acc_smooth + Y_Acc_smooth) / 2), 2)
 
 
   time.sleep(time_interval)
 
   Y_ACC = abs(round(X_Acc_smooth,2)) #change the varible name to X_ACC
   z_rotation += z_Gyro * time_interval
-  print("Rotation: ", z_rotation)
+
+  #print("Rotation: ", z_rotation)
   
   MasterPC.send_message("/MainGalleryRot", z_rotation)
+
+  # if facing the same way stop playing everything
+  # supercollider has to stop
+  # 
+
 
   if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)): #or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
       
@@ -219,7 +221,7 @@ while 1:
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
 
-  elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
+  elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)): #or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
       
       print("Play Note D ")
       #print("Z_ang = " + str(z_rotation))
@@ -235,7 +237,6 @@ while 1:
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
 
-
   elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4)): #or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
 
       print("Play Note F")
@@ -244,8 +245,7 @@ while 1:
       
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
     
-  
-  elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
+  elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)): #or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
 
       print("Play Note G")
       #print("Z_ang = " + str(z_rotation))
@@ -253,8 +253,6 @@ while 1:
       
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
 
-    
-  
   elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) :#or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
       
       print("play Note A")
@@ -264,7 +262,6 @@ while 1:
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
 
-  
   elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7)): # or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)):
 
       print("play Note B")
@@ -273,7 +270,6 @@ while 1:
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
 
-  
   elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)): #or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)):
 
       print("play Note C")
@@ -283,15 +279,14 @@ while 1:
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)  
   
-  elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9)):# or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
+  elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9)): # or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
 
       print("play Note D")
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [C_MajorScale[1] , Y_ACC ]
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-
-  
+ 
   elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)): #or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)):
 
       print("play Note E")
@@ -299,8 +294,7 @@ while 1:
       SC_Control = [C_MajorScale[2] , Y_ACC ]
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
-
-  
+ 
   elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)):# or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)):
 
       print("play Note F")
@@ -309,7 +303,6 @@ while 1:
 
       if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
 
-  
   elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)):# or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):
 
       print("play Note G")

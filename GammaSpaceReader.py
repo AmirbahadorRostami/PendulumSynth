@@ -207,7 +207,7 @@ while 1:
   #print("YACC: ", Y_ACC)
   print("rotation ", z_rotation)
   
-  MasterPC.send_message("/MainGalleryRot", z_rotation)
+  MasterPC.send_message("/GamaSpaceRot", z_rotation)
 
   # if facing the same way stop playing everything
   # supercollider has to stop

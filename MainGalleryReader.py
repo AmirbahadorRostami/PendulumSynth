@@ -221,7 +221,6 @@ while 1:
       SC_Control = [C_MajorScale[0] , avg_ACC ]
       client.send_message("/SC_Control", SC_Control)
 
-
   elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
       
       #print("Play Note D ")

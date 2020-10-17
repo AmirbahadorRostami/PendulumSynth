@@ -66,7 +66,7 @@ OSCdef('SSUListener',{
 
 	//if(oldFreq != msg[1] && oldAmp != msg[2],
 	x.set(\freq, msg[1].midicps);
-	x.set(\filterFreq, (msg[2] * 1000) + 500);
+	x.set(\filterFreq, msg[2] * 1000);
 	//);
 
 	oldFreq = msg[1];
@@ -75,10 +75,7 @@ OSCdef('SSUListener',{
 },'/SC_Control');
 )
 
-
 (
   n = NetAddr(\localhost.asString, 5005);
   o = OSCFunc({|msg, time, from, port| msg.postln}, '/SC_Control', nil, 5005);
 )
-
-

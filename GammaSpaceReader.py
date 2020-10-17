@@ -204,7 +204,8 @@ while 1:
   Y_ACC = abs(round(X_Acc_smooth,2)) #change the varible name to X_ACC
   z_rotation += z_Gyro * time_interval
 
-  #print("Rotation: ", z_rotation)
+  #print("YACC: ", Y_ACC)
+  print("rotation ", z_rotation)
   
   MasterPC.send_message("/MainGalleryRot", z_rotation)
 

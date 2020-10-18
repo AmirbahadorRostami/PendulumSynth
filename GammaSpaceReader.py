@@ -8,8 +8,8 @@ from pythonosc.osc_server import AsyncIOOSCUDPServer
 from pythonosc.dispatcher import Dispatcher
 import asyncio
 
-Device_MainGallery = 0x68   # device address
-Device_GammaSpace = 0x68   # device address
+Device_Adress = 0x68   # device address
+
 
 isAlligned = false
 
@@ -57,18 +57,26 @@ GYRO_Z  = 0x47
 TEMP = 0x41
 bus = smbus.SMBus(1)
 
+GamaSpcae_IP = "192.168.0.228"
+GamaSpace_Port = 3000
+
+MainGallery_IP = "192.168.0.220"
+MainGallery_Port = 4000
+
+
+
 #MPU Functions
 def InitMPU():
-    bus.write_byte_data(Device_GammaSpace, DIV, 7)
-    bus.write_byte_data(Device_GammaSpace, PWR_M, 1)
-    bus.write_byte_data(Device_GammaSpace, CONFIG, 0)
-    bus.write_byte_data(Device_GammaSpace, GYRO_CONFIG, 24)
-    bus.write_byte_data(Device_GammaSpace, INT_EN, 1)
+    bus.write_byte_data(Device_Adress, DIV, 7)
+    bus.write_byte_data(Device_Adress, PWR_M, 1)
+    bus.write_byte_data(Device_Adress, CONFIG, 0)
+    bus.write_byte_data(Device_Adress, GYRO_CONFIG, 24)
+    bus.write_byte_data(Device_Adress, INT_EN, 1)
     time.sleep(1)
  
 def readMPU(addr):
-    high = bus.read_byte_data(Device_GammaSpace, addr)
-    low = bus.read_byte_data(Device_GammaSpace, addr+1)
+    high = bus.read_byte_data(Device_Adress, addr)
+    low = bus.read_byte_data(Device_Adress, addr+1)
     value = ((high << 8) | low)
 
     if(value > 32768):
@@ -158,9 +166,8 @@ def rolling_mean(arr, val , n = 5):
         arr = arr[1:]
     return arr,np.mean(np.array(arr))
 
-def GamaSpace_handler(address, *args):
+def InComingNote_handler(address, *args):
     global isAlligned
-
     print(args)
 
     #GamaSpace_Rotation = round(args[0],2)
@@ -170,8 +177,8 @@ InitMPU()
 calibrate()
 
 
-client = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
-MasterPC = udp_client.SimpleUDPClient("192.168.0.186", 3000)
+SuperCollider = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
+MainGallerySSU = udp_client.SimpleUDPClient(MainGallery_IP, MainGallery_Port)
 
 X_ACC_Buff = []
 Y_ACC_Buff = []
@@ -184,176 +191,158 @@ async def loop():
     # Main
     while 1:
 
-    GyroData = gyro()
-    AccData = accel()
-    
-    x_Gyro = round(GyroData[0],2)
-    y_Gyro = round(GyroData[1],2)
-    z_Gyro = round(GyroData[2],2)  
-
-    x_Acc = AccData[0]
-    y_Acc = AccData[1]
-    z_Acc = AccData[2]
-    
-    #print("Z_ACC ", z_Acc)
-    #print("Y_ACC ", y_Acc)
-    #print("X_ACC ", x_Acc)
-
-    X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,3)
-    #Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,7)
-    #Z_ACC_Buff , Z_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc,7)
-    #print("X_ACC_Buff: ", X_ACC_Buff)
-    #print("X_ACC_Smooth: " , round(X_Acc_smooth,2))
-    #print("Y_ACC_Smooth: " , round(Y_Acc_smooth,2))
-    #print("Z_ACC_Smooth: ", abs(round(Z_Acc_smooth,2)))
-
-
-    time.sleep(time_interval)
-
-    Y_ACC = abs(round(X_Acc_smooth,2)) #change the varible name to X_ACC
-    z_rotation += z_Gyro * time_interval
-
-    #print("YACC: ", Y_ACC)
-    #print("rotation ", z_rotation)
-    
-    
-
-    # if facing the same way stop playing everything
-    # supercollider has to stop
-    # 
-
-
-    if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
+        GyroData = gyro()
+        AccData = accel()
         
-        print("Play Note C ")
-        #print("Z_ang = " + str(z_rotation))
-        MasterPC.send_message("/GamaSpaceNote", 'C')
-        SC_Control = [C_MajorScale[0] , Y_ACC ]
+        x_Gyro = round(GyroData[0],2)
+        y_Gyro = round(GyroData[1],2)
+        z_Gyro = round(GyroData[2],2)  
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-
-    elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
+        x_Acc = AccData[0]
+        y_Acc = AccData[1]
+        z_Acc = AccData[2]
         
-        print("Play Note D ")
-        #print("Z_ang = " + str(z_rotation))
-        MasterPC.send_message("/GamaSpaceNote", 'D')
-        SC_Control = [ C_MajorScale[1] ,Y_ACC ]
+        #print("Z_ACC ", z_Acc)
+        #print("Y_ACC ", y_Acc)
+        #print("X_ACC ", x_Acc)
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
+        X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,3)
+        #Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,7)
+        #Z_ACC_Buff , Z_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc,7)
+        #print("X_ACC_Buff: ", X_ACC_Buff)
+        #print("X_ACC_Smooth: " , round(X_Acc_smooth,2))
+        #print("Y_ACC_Smooth: " , round(Y_Acc_smooth,2))
+        #print("Z_ACC_Smooth: ", abs(round(Z_Acc_smooth,2)))
 
-    elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
-        print("Play Note E ")
-        #print("Z_ang = " + str(z_rotation))
-        MasterPC.send_message("/GamaSpaceNote", 'E')
-        SC_Control = [C_MajorScale[2] , Y_ACC ]
 
+        time.sleep(time_interval)
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
+        X_ACC = abs(round(X_Acc_smooth,2))
+        z_rotation += z_Gyro * time_interval
 
-    elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4) or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
-
-        print("Play Note F")
-        #print("Z_ang = " + str(z_rotation))
-        MasterPC.send_message("/GamaSpaceNote", 'F')
-        SC_Control = [C_MajorScale[3] , Y_ACC ]
+        #print("YACC: ", Y_ACC)
+        #print("rotation ", z_rotation)
         
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-        
-    elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
-
-        print("Play Note G")
-        #print("Z_ang = " + str(z_rotation))
-        MasterPC.send_message("/GamaSpaceNote", 'G')
-        SC_Control = [C_MajorScale[4] , Y_ACC ]
-        
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-
-    elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
-        
-        print("play Note A")
-        #print("Z_ang = " + str(z_rotation))
-        MasterPC.send_message("/GamaSpaceNote", 'A')
-        SC_Control = [C_MajorScale[5] , Y_ACC ]
-
-
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-
-    elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7)  or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)):
-
-        print("play Note B")
-        #print("Z_ang = " + str(z_rotation))
-        MasterPC.send_message("/GamaSpaceNote", 'B')
-        SC_Control = [C_MajorScale[6] , Y_ACC ]
-
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-
-    elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)):
-
-        print("play Note C")
-        #print("Z_ang = " + str(z_rotation))
-        #MasterPC.send_message("/GamaSpaceNote", 'C')
-        SC_Control = [C_MajorScale[0] , Y_ACC ]
-        client.send_message("/SC_Control", SC_Control)
-
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)  
     
-    elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9)  or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
 
-        print("play Note D")
-        #print("Z_ang = " + str(z_rotation))
-        SC_Control = [C_MajorScale[1] , Y_ACC ]
+        if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
+            
+            #print("Play Note C ")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'C')
+            SC_Control = [C_MajorScale[0] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-    
-    elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)):
+        elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
+            
+            #print("Play Note D ")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'D')
+            SC_Control = [ C_MajorScale[1] ,X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
 
-        print("play Note E")
-        #print("Z_ang = " + str(z_rotation))
-        SC_Control = [C_MajorScale[2] , Y_ACC ]
+        elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3)) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
-    
-    elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)):
+            #print("Play Note E ")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'E')
+            SC_Control = [C_MajorScale[2] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
 
-        print("play Note F")
-        #print("Z_ang = " + str(z_rotation))
-        SC_Control = [C_MajorScale[3] , Y_ACC ]
+        elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4)) or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
+            #print("Play Note F")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'F')
+            SC_Control = [C_MajorScale[3] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            
+        elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
 
-    elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):
+            #print("Play Note G")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'G')
+            SC_Control = [C_MajorScale[4] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
 
-        print("play Note G")
-        #print("Z_ang = " + str(z_rotation))
-        SC_Control = [C_MajorScale[4] , Y_ACC ]
+        elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
+            
+            #print("play Note A")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'A')
+            SC_Control = [C_MajorScale[5] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control) 
-            #client.send_message("/z_Rot", C_MajorScale[4])
+        elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7))  or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)):
 
-    elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)):
+            #print("play Note B")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'B')
+            SC_Control = [C_MajorScale[6] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
 
-        print("play Note A")
-        #print("Z_ang = " + str(z_rotation))  
-        SC_Control = [C_MajorScale[5] , Y_ACC ]
+        elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)):
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)
-            #client.send_message("/z_Rot", C_MajorScale[5])  
+            #print("play Note C")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'C')
+            SC_Control = [C_MajorScale[0] , X_ACC ]
+            SuperCollider.send_message("/SC_Control", SC_Control)
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)  
+        
+        elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9))  or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
 
-    elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)):
+            #print("play Note D")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'D')
+            SC_Control = [C_MajorScale[1] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+        
+        elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)):
 
+            #print("play Note E")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'E')
+            SC_Control = [C_MajorScale[2] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
+        
+        elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)):
 
-        print("play Note B")
-        #print("Z_ang = " + str(z_rotation))
+            #print("play Note F")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'F')
+            SC_Control = [C_MajorScale[3] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
 
-        # if above trigger threshold and if there is new value
-        SC_Control = [C_MajorScale[6] , Y_ACC ]
+        elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):
 
-        if (Y_ACC > trigTresh) : client.send_message("/SC_Control", SC_Control)  
-            #client.send_message("/z_Rot", C_MajorScale[6])
+            #print("play Note G")
+            #print("Z_ang = " + str(z_rotation))
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'G')
+            SC_Control = [C_MajorScale[4] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
+
+        elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13)) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)):
+
+            #print("play Note A")
+            #print("Z_ang = " + str(z_rotation))  
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'A')
+            SC_Control = [C_MajorScale[5] , X_ACC ]
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+
+        elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14)) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)):
+
+            #print("play Note B")
+            #print("Z_ang = " + str(z_rotation))
+            # if above trigger threshold and if there is new value
+            SC_Control = [C_MajorScale[6] , X_ACC ]
+            MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'B')
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)  
+
 
 
 async def init_main():
-    server = AsyncIOOSCUDPServer((ip, port), dispatcher, asyncio.get_event_loop())
+    server = AsyncIOOSCUDPServer((GamaSpcae_IP, GamaSpace_Port), dispatcher, asyncio.get_event_loop())
     transport, protocol = await server.create_serve_endpoint()  # Create datagram endpoint and start serving
 
     await loop()  # Enter main loop of program

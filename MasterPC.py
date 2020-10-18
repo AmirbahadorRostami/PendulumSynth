@@ -37,7 +37,7 @@ ip = "192.168.0.186"
 port = 3000
 
 
-#GammaSpace_SSU = udp_client.SimpleUDPClient("192.168.0.228", 4005)
+GammaSpace_SSU = udp_client.SimpleUDPClient("192.168.0.228", 4005)
 #MainGallery_SSU = udp_client.SimpleUDPClient("192.168.0.2280", 6005)
 
 # main Function of the loop
@@ -51,9 +51,10 @@ async def loop():
         
         if GamaSpace_Rotation == MainGalleryRotation :
             print("were facing the same way")
+            GammaSpace_SSU.send_message("/inSync", 1)
             #send a response to both SSU
             
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.01)
 
 
 async def init_main():

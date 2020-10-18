@@ -203,9 +203,8 @@ while 1:
   #print("X_ACC_Buff: ", X_ACC_Buff)
   #print("X_ACC_Smooth: " , X_Acc_smooth)
 
-  avg_ACC = round(abs((X_Acc_smooth + Y_Acc_smooth) / 2), 2)
-
-  print(round(abs(X_Acc_smooth),2))
+  #avg_ACC = round(abs((X_Acc_smooth + Y_Acc_smooth) / 2), 2)
+  #print(round(abs(X_Acc_smooth),2))
   
 
   time.sleep(time_interval)
@@ -215,9 +214,10 @@ while 1:
 
   if ((z_rotation >= 0) and (z_rotation <= Note_Step_1)) or ((z_rotation <= 0) and (z_rotation >= -Note_Step_1)):
       
-      #print("Play Note C ")
+      print("Play Note C ")
       #print("Z_ang = " + str(z_rotation))
-      #if (x_Acc > trigTresh) or (y_Acc > trigTresh) : 
+      MasterPC.send_message("/MainGalleryRot",'C')
+
       SC_Control = [C_MajorScale[0] , avg_ACC ]
       client.send_message("/SC_Control", SC_Control)
 
@@ -226,6 +226,7 @@ while 1:
       #print("Play Note D ")
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [ C_MajorScale[1] , avg_ACC ]
+      MasterPC.send_message("/MainGalleryRot",;'D')
       client.send_message("/SC_Control", SC_Control)
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :   
           #client.send_message("/z_Rot", C_MajorScale[1])
@@ -233,6 +234,7 @@ while 1:
   elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3)) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
       #print("Play Note E ")
       #print("Z_ang = " + str(z_rotation))
+      MasterPC.send_message("/MainGalleryRot",'E')
       SC_Control = [C_MajorScale[2] , avg_ACC ]
       client.send_message("/SC_Control", SC_Control)
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
@@ -243,6 +245,7 @@ while 1:
       #print("Play Note F")
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [C_MajorScale[3] , avg_ACC ]
+      MasterPC.send_message("/MainGalleryRot",'F')
       client.send_message("/SC_Control", SC_Control)
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
           #client.send_message("/z_Rot", C_MajorScale[3])
@@ -252,6 +255,7 @@ while 1:
       #print("Play Note G")
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [C_MajorScale[4] , avg_ACC ]
+      MasterPC.send_message("/MainGalleryRot",'G')
       client.send_message("/SC_Control", SC_Control)
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
           #client.send_message("/z_Rot", C_MajorScale[4])
@@ -261,6 +265,7 @@ while 1:
       #print("play Note A")
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [C_MajorScale[5] , avg_ACC ]
+      MasterPC.send_message("/MainGalleryRot",'A')
       client.send_message("/SC_Control", SC_Control)
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
           #client.send_message("/z_Rot", C_MajorScale[5])
@@ -271,6 +276,7 @@ while 1:
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [C_MajorScale[6] , avg_ACC ]
       client.send_message("/SC_Control", SC_Control)
+      MasterPC.send_message("/MainGalleryRot",'B')
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
           #client.send_message("/z_Rot", C_MajorScale[6])
   
@@ -280,6 +286,7 @@ while 1:
       #print("Z_ang = " + str(z_rotation))
       SC_Control = [C_MajorScale[0] , avg_ACC ]
       client.send_message("/SC_Control", SC_Control)
+      MasterPC.send_message("/MainGalleryRot",'C')
       #if (x_Acc > trigTresh) or (y_Acc > trigTresh) :  
           #client.send_message("/z_Rot", C_MajorScale[0]) 
   

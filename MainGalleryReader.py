@@ -17,7 +17,7 @@ GxCal=0
 GyCal=0
 GzCal=0
 
-z_rotation = 0
+
 x_Movment = 0
 y_Movment = 0
 time_interval = 0.01
@@ -172,20 +172,20 @@ def InComingNote_handler(address, *args):
 InitMPU()
 calibrate()
 
-
 SuperCollider = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
 GammaSpaceSSU = udp_client.SimpleUDPClient(GamaSpcae_IP, GamaSpace_Port)
 
 dispatcher = Dispatcher()
 dispatcher.map("/GamaSpaceCurrentNote", InComingNote_handler)
 
-X_ACC_Buff = []
-Y_ACC_Buff = []
-Z_ACC_Buff = []
-
 time.sleep(1)
 
 async def loop():
+
+    X_ACC_Buff = []
+    Y_ACC_Buff = []
+    Z_ACC_Buff = []
+    z_rotation = 0
 
     # Main
     while 1:

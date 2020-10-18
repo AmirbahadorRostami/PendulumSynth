@@ -41,18 +41,21 @@ SynthDef(\vosc, {
 
 	sig = Splay.ar(sig);
 	sig = LeakDC.ar(sig) * amp * env;
+	sig = Mix(sig,0.1);
+	sig = FreeVerb.ar(sig, mix: 0.2, room: 0.9, mul: 0.4);
 
 	Out.ar(out,sig);
 }).add;
 )
 
-x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4]);
+x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 0]);
+y = Synth(\vosc,[\freq,32.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 1]);
 
 x.set(\freq,100)
 x.set(\amp ,1)
 x.set(\gate, 1)
 x.set(\gate, 0)
-x.set(\filterFreq, 200)
+x.set(\filterFreq, 500)
 x.free;
 
 s.freeAll;

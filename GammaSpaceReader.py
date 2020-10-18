@@ -18,7 +18,7 @@ GxCal=0
 GyCal=0
 GzCal=0
 
-z_rotation = 0
+
 x_Movment = 0
 y_Movment = 0
 time_interval = 0.01
@@ -182,13 +182,16 @@ MainGallerySSU = udp_client.SimpleUDPClient(MainGallery_IP, MainGallery_Port)
 dispatcher = Dispatcher()
 dispatcher.map("/MainGalleryCurrentNote", InComingNote_handler)
 
-X_ACC_Buff = []
-Y_ACC_Buff = []
-Z_ACC_Buff = []
+
 
 time.sleep(1)
 
 async def loop():
+
+    X_ACC_Buff = []
+    Y_ACC_Buff = []
+    Z_ACC_Buff = []
+    z_rotation = 0
 
     # Main
     while 1:

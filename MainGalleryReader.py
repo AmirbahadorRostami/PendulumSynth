@@ -10,9 +10,6 @@ import asyncio
 
 Device_Adress = 0x68   # device address
 
-
-isAlligned = false
-
 AxCal=0
 AyCal=0
 AzCal=0

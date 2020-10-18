@@ -11,8 +11,6 @@ import asyncio
 Device_Adress = 0x68   # device address
 
 
-isAlligned = false
-
 AxCal=0
 AyCal=0
 AzCal=0
@@ -179,6 +177,10 @@ calibrate()
 
 SuperCollider = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
 MainGallerySSU = udp_client.SimpleUDPClient(MainGallery_IP, MainGallery_Port)
+
+
+dispatcher = Dispatcher()
+dispatcher.map("/MainGalleryCurrentNote", InComingNote_handler)
 
 X_ACC_Buff = []
 Y_ACC_Buff = []

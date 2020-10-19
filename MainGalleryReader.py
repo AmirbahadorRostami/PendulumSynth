@@ -55,10 +55,10 @@ TEMP = 0x41
 bus = smbus.SMBus(1)
 
 
-GamaSpcae_IP = "192.168.0.228"
+GamaSpcae_IP = "169.254.249.172"
 GamaSpace_Port = 3000
 
-MainGallery_IP = "192.168.0.220"
+MainGallery_IP = "169.254.106.139"
 MainGallery_Port = 4000
 
 #MPU Functions

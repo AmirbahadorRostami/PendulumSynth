@@ -39,7 +39,8 @@ Note_Step_14 = Note_Step_1 * 14
 
 C_MajorScale = [36,38,40,41,43,45,47]
 trigTresh = 0.03
-GammaSpcaeCurrentNote = 0
+
+#GammaSpcaeCurrentNote = 0
 
 PWR_M   = 0x6B
 DIV   = 0x19

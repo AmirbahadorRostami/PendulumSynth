@@ -39,7 +39,7 @@ Note_Step_13 = Note_Step_1 * 13
 Note_Step_14 = Note_Step_1 * 14
 
 C_MajorScale = [36,38,40,41,43,45,47]
-MainGalleryCurrentNote = 0
+#MainGalleryCurrentNote = 0
 trigTresh = 0.03
 
 PWR_M   = 0x6B

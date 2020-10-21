@@ -181,10 +181,10 @@ dispatcher = Dispatcher()
 dispatcher.map("/MainGalleryCurrentNote", InComingNote_handler)
 
 
-global X_ACC_Buff = []
-global Y_ACC_Buff = []
-global Z_ACC_Buff = []
-global z_rotation = 0
+X_ACC_Buff = []
+Y_ACC_Buff = []
+Z_ACC_Buff = []
+z_rotation = 0
 
 
 time.sleep(1)
@@ -211,7 +211,7 @@ async def loop():
         #print("Y_ACC ", y_Acc)
         #print("X_ACC ", x_Acc)
 
-        X_ACC_Buff , X_Acc_smooth = rolling_mean(X_ACC_Buff , x_Acc,3)
+        X_ACC_Buff , X_Acc_smooth = rolling_mean(global X_ACC_Buff , x_Acc,3)
         #Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,7)
         #Z_ACC_Buff , Z_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc,7)
         #print("X_ACC_Buff: ", X_ACC_Buff)
@@ -223,10 +223,10 @@ async def loop():
         time.sleep(time_interval)
 
         X_ACC = abs(round(X_Acc_smooth,2))
-        z_rotation += z_Gyro * time_interval
+        global z_rotation += z_Gyro * time_interval
 
         #print("YACC: ", Y_ACC)
-        print("my rotation ", z_rotation)
+        print("my rotation ", global z_rotation)
 
         print("this my partners note " , MainGalleryCurrentNote)
         

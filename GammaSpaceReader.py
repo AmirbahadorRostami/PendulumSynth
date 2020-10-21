@@ -181,14 +181,17 @@ dispatcher = Dispatcher()
 dispatcher.map("/MainGalleryCurrentNote", InComingNote_handler)
 
 
+global X_ACC_Buff = []
+global Y_ACC_Buff = []
+global Z_ACC_Buff = []
+global z_rotation = 0
+
+
 time.sleep(1)
 
 async def loop():
 
-    X_ACC_Buff = []
-    Y_ACC_Buff = []
-    Z_ACC_Buff = []
-    z_rotation = 0
+
 
     # Main
     while 1:

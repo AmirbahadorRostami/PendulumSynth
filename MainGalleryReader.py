@@ -337,6 +337,7 @@ async def loop():
             SC_Control = [C_MajorScale[6] , Y_ACC ]
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 'B')
             if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)  
+        await asyncio.sleep(1)  
 
 
 

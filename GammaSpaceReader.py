@@ -340,7 +340,10 @@ async def loop():
             # if above trigger threshold and if there is new value
             SC_Control = [C_MajorScale[6] , X_ACC ]
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", 'B')
-            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)  
+            if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+
+        await asyncio.sleep(1)  
+    
 
 
 

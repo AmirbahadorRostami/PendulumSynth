@@ -179,16 +179,18 @@ GammaSpaceSSU = udp_client.SimpleUDPClient(GamaSpcae_IP, GamaSpace_Port)
 dispatcher = Dispatcher()
 dispatcher.map("/GamaSpaceCurrentNote", InComingNote_handler)
 
-global X_ACC_Buff = []
-global Y_ACC_Buff = []
-global Z_ACC_Buff = []
-global z_rotation = 0
 
 
 time.sleep(1)
 
 async def loop():
+    print("im starting from here")
 
+
+    X_ACC_Buff = []
+    Y_ACC_Buff = []
+    Z_ACC_Buff = []
+    z_rotation = 0
 
     # Main
     while 1:

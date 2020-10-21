@@ -181,17 +181,18 @@ dispatcher = Dispatcher()
 dispatcher.map("/MainGalleryCurrentNote", InComingNote_handler)
 
 
-X_ACC_Buff = []
-Y_ACC_Buff = []
-Z_ACC_Buff = []
-z_rotation_Glb = 0
 
 
 time.sleep(1)
 
 async def loop():
+    print("im starting from here")
 
 
+    X_ACC_Buff = []
+    Y_ACC_Buff = []
+    Z_ACC_Buff = []
+    z_rotation = 0
 
     # Main
     while 1:
@@ -228,8 +229,7 @@ async def loop():
         z_rotation += z_Gyro * time_interval
 
         #print("YACC: ", Y_ACC)
-        print("my rotation ", global z_rotation)
-
+        print("my rotation ", z_rotation)
         print("this my partners note " , MainGalleryCurrentNote)
         
     
@@ -360,7 +360,7 @@ async def loop():
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", 6)#'B')
             # if MainGalleryCurrentNote == 6 : print("we are alligned")
             if (X_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
-        global z_rotation_Glb = z_rotation
+        
         await asyncio.sleep(1)  
     
 
@@ -369,6 +369,7 @@ async def loop():
 async def init_main():
     server = AsyncIOOSCUDPServer((GamaSpcae_IP, GamaSpace_Port), dispatcher, asyncio.get_event_loop())
     transport, protocol = await server.create_serve_endpoint()  # Create datagram endpoint and start serving
+    
 
     await loop()  # Enter main loop of program
 

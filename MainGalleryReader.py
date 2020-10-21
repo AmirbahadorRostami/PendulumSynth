@@ -222,6 +222,8 @@ async def loop():
 
         #print("YACC: ", Y_ACC)
         #print("rotation ", z_rotation)
+
+        print("this my partners note " ,GammaSpcaeCurrentNote)
         
 
 

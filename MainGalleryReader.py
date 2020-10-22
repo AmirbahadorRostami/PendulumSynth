@@ -184,7 +184,7 @@ dispatcher.map("/GamaSpaceCurrentNote", InComingNote_handler)
 time.sleep(1)
 
 async def loop():
-    print("im starting from here")
+    #print("im starting from here")
 
 
     X_ACC_Buff = []
@@ -227,8 +227,7 @@ async def loop():
         #print("YACC: ", Y_ACC)
         #print("My rotation ", z_rotation)
         #print("this my partners note " ,GammaSpcaeCurrentNote)
-
-        GammaSpaceSSU.send_message("/MainGalleryCurrentNote", z_rotation)
+        #GammaSpaceSSU.send_message("/MainGalleryCurrentNote", z_rotation)
         
 
 
@@ -236,130 +235,184 @@ async def loop():
             
             #print("Play Note C ")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 0)#'C')
-            SC_Control = [C_MajorScale[0] , Y_ACC ]
-            if GammaSpcaeCurrentNote == 0 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            myCurrentNote = C_MajorScale[0]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
             
             #print("Play Note D ")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 1)#'D')
-            SC_Control = [ C_MajorScale[1] ,Y_ACC ]
-            if GammaSpcaeCurrentNote == 1 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            myCurrentNote = C_MajorScale[1]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote, Y_ACC, GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3)) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
 
             #print("Play Note E ")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 2)#'E')
-            if GammaSpcaeCurrentNote == 2 : print("we are alligned")
-            SC_Control = [C_MajorScale[2] , Y_ACC ]
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
+            myCurrentNote = C_MajorScale[2]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC ,GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+        
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control) 
 
         elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4)) or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
 
             #print("Play Note F")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 3)#'F')
-            if GammaSpcaeCurrentNote == 3 : print("we are alligned")
-            SC_Control = [C_MajorScale[3] , Y_ACC ]
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            myCurrentNote = C_MajorScale[3]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
             
         elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
 
             #print("Play Note G")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 4)#'G')
-            if GammaSpcaeCurrentNote == 4 : print("we are alligned")
-            SC_Control = [C_MajorScale[4] , Y_ACC ]
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            myCurrentNote = C_MajorScale[4]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
             
             #print("play Note A")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 5)#'A')
-            if GammaSpcaeCurrentNote == 5 : print("we are alligned")
-            SC_Control = [C_MajorScale[5] , Y_ACC ]
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            myCurrentNote = C_MajorScale[5]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC ,GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7))  or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)):
 
             #print("play Note B")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 6)#'B')
-            if GammaSpcaeCurrentNote == 6 : print("we are alligned")
-            SC_Control = [C_MajorScale[6] , Y_ACC ]
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            myCurrentNote = C_MajorScale[6]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)):
 
             #print("play Note C")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 0)#'C')
-            SC_Control = [C_MajorScale[0] , Y_ACC ]
-            if GammaSpcaeCurrentNote == 0 : print("we are alligned")
-            SuperCollider.send_message("/SC_Control", SC_Control)
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)  
+            myCurrentNote = C_MajorScale[0]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)#'C')
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)  
         
         elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9))  or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
 
             #print("play Note D")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 1)#'D')
-            SC_Control = [C_MajorScale[1] , Y_ACC ]
-            if GammaSpcaeCurrentNote == 1 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            myCurrentNote = C_MajorScale[1]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
         
         elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)):
 
             #print("play Note E")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 2)#'E')
-            SC_Control = [C_MajorScale[2] , Y_ACC ]
-            if GammaSpcaeCurrentNote == 2 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
+            myCurrentNote = C_MajorScale[2]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)#'E')
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control) 
         
         elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)):
 
             #print("play Note F")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 3)#'F')
-            SC_Control = [C_MajorScale[3] , Y_ACC ]
-            if GammaSpcaeCurrentNote == 3 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
+            myCurrentNote = C_MajorScale[3]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control) 
 
         elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):
 
             #print("play Note G")
             #print("Z_ang = " + str(z_rotation))
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 4)#'G')
-            SC_Control = [C_MajorScale[4] , Y_ACC ]
-            if GammaSpcaeCurrentNote == 4 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control) 
+            myCurrentNote = C_MajorScale[4]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC , GammaSpcaeCurrentNote]
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control) 
 
         elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13)) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)):
 
             #print("play Note A")
-            #print("Z_ang = " + str(z_rotation))  
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 5)#'A')
-            SC_Control = [C_MajorScale[5] , Y_ACC ]
-            if GammaSpcaeCurrentNote == 5 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)
+            #print("Z_ang = " + str(z_rotation))
+            myCurrentNote = C_MajorScale[5]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            SC_Control = [myCurrentNote , Y_ACC ,GammaSpcaeCurrentNote]
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14)) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)):
 
             #print("play Note B")
             #print("Z_ang = " + str(z_rotation))
-
-            SC_Control = [C_MajorScale[6] , Y_ACC ]
-            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", 6)#'B')
-            if GammaSpcaeCurrentNote == 6 : print("we are alligned")
-            if (Y_ACC > trigTresh) : SuperCollider.send_message("/SC_Control", SC_Control)  
-        await asyncio.sleep(1)  
+            myCurrentNote = C_MajorScale[6]
+            SC_Control = [myCurrentNote , Y_ACC ,GammaSpcaeCurrentNote]
+            GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
+            
+            if GammaSpcaeCurrentNote == myCurrentNote : 
+                print("we are alligned")
+            elif (Y_ACC > trigTresh) : 
+                SuperCollider.send_message("/SC_Control", SC_Control)  
+        
+        await asyncio.sleep(time_interval)  
 
 
 

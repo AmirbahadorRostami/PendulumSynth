@@ -31,6 +31,7 @@ SynthDef(\vosc, {
 	var sig, bufpos, detuneSig , env;
 
 	env = EnvGen.kr(Env.asr(0.5),gate);
+	amp = VarLag.kr(amp , 0.1 , Env.shapeNumber(\lin));
 
 	detuneSig = LFNoise0.kr(0.2!8).bipolar(0.2).midiratio; //couresFX
 
@@ -51,7 +52,7 @@ SynthDef(\vosc, {
 x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 0]);
 y = Synth(\vosc,[\freq,32.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 1]);
 
-x.set(\freq,100)
+x.set(\freq,100);
 x.set(\amp ,1)
 x.set(\gate, 1)
 x.set(\gate, 0)
@@ -60,20 +61,23 @@ x.free;
 
 s.freeAll;
 
+
+
 //when running in RPI change to Local Address
 (
 NetAddr(\localhost.asString, 5005);
 OSCdef('SSUListener',{
 	arg msg;
-	var oldFreq,oldAmp;
+	//var oldFreq,oldAmp;
 
-	//if(oldFreq != msg[1] && oldAmp != msg[2],
-	x.set(\freq, msg[1].midicps);
+
+	x.set(\freq, Scale.major.degreeToFreq(msg[1], 61.midicps, 1));
 	x.set(\filterFreq, msg[2] * 1000);
-	//);
 
-	oldFreq = msg[1];
-	oldAmp = msg[2];
+	y.set(\freq, Scale.major.degreeToFreq(msg[3], 61.midicps, 1));
+
+	//oldFreq = msg[1];
+	//oldAmp = msg[2];
 
 },'/SC_Control');
 )

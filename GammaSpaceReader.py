@@ -23,7 +23,7 @@ x_Movment = 0
 y_Movment = 0
 time_interval = 0.01
 
-Note_Step_1 = 0.033
+Note_Step_1 = 1.25
 Note_Step_2 = Note_Step_1 * 2
 Note_Step_3 = Note_Step_1 * 3
 Note_Step_4 = Note_Step_1 * 4
@@ -38,7 +38,6 @@ Note_Step_12 = Note_Step_1 * 12
 Note_Step_13 = Note_Step_1 * 13
 Note_Step_14 = Note_Step_1 * 14
 
-C_MajorScale = [36,38,40,41,43,45,47]
 MainGalleryCurrentNote = 0
 trigTresh = 0.03
 
@@ -221,10 +220,10 @@ async def loop():
         #print("Z_ACC_Smooth: ", abs(round(Z_Acc_smooth,2)))
 
 
-        time.sleep(time_interval)
+        #time.sleep(time_interval)
 
         X_ACC = abs(round(X_Acc_smooth,2))
-        z_rotation += z_Gyro * time_interval
+        z_rotation += z_Gyro * time_interval + 0.001
 
         print("YACC: ", X_ACC)
         #print("my rotation ", z_rotation)

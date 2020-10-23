@@ -226,7 +226,7 @@ async def loop():
         X_ACC = abs(round(X_Acc_smooth,2))
         z_rotation += z_Gyro * time_interval
 
-        #print("YACC: ", Y_ACC)
+        print("YACC: ", X_ACC)
         #print("my rotation ", z_rotation)
         #print("this my partners Rotation " , MainGalleryCurrentNote)
         #MainGallerySSU.send_message("/GamaSpaceCurrentNote", z_rotation)

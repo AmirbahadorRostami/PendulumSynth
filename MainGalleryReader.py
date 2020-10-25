@@ -22,7 +22,7 @@ x_Movment = 0
 y_Movment = 0
 time_interval = 0.01
 
-Note_Step_1 = 0.0333
+Note_Step_1 = 1.714
 Note_Step_2 = Note_Step_1 * 2
 Note_Step_3 = Note_Step_1 * 3
 Note_Step_4 = Note_Step_1 * 4
@@ -221,7 +221,7 @@ async def loop():
         #time.sleep(time_interval)
 
         Y_ACC = abs(round(X_Acc_smooth,2)) #change the varible name to X_ACC
-        z_rotation += z_Gyro * time_interval
+        z_rotation += z_Gyro * time_interval + 0.001
 
         #print("YACC: ", Y_ACC)
         #print("My rotation ", z_rotation)

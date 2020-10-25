@@ -74,7 +74,7 @@ OSCdef('SSUListener',{
 	x.set(\freq, Scale.major.degreeToFreq(msg[1], 61.midicps, -2));
 	y.set(\freq, Scale.major.degreeToFreq(msg[3], 61.midicps, -2));
 
-	if (msg[2] == 1)
+	if (msg[2] == 1,
 	{
 		y.set(\amp,1.0);
 		x.set(\amp ,1.0);
@@ -82,7 +82,7 @@ OSCdef('SSUListener',{
 	{
 		y.set(\amp,0.7);
 		x.set(\amp ,0.7);
-	}
+	})
 
 },'/SC_Control');
 )

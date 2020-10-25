@@ -77,7 +77,7 @@ OSCdef('SSUListener',{
 
 	// amp 0 - 1
 
-	if (msg[2] == 1)
+	if (msg[2] == 1,
 	{
 		y.set(\amp,0.5);
 		x.set(\amp,1.0);
@@ -85,7 +85,7 @@ OSCdef('SSUListener',{
 	{
 		y.set(\amp,0.2);
 		x.set(\amp,0.6);
-	}
+	})
 	// filter
 
 	//oldFreq = msg[1];

@@ -211,7 +211,7 @@ async def loop():
         #print("Y_ACC ", y_Acc)
         #print("X_ACC ", x_Acc)
 
-        X_ACC_Buff , X_Acc_smooth = rolling_mean( X_ACC_Buff , x_Acc,3)
+        #X_ACC_Buff , X_Acc_smooth = rolling_mean( X_ACC_Buff , x_Acc,3)
         #Y_ACC_Buff , Y_Acc_smooth = rolling_mean(Y_ACC_Buff , y_Acc,7)
         #Z_ACC_Buff , Z_Acc_smooth = rolling_mean(Z_ACC_Buff , z_Acc,7)
         #print("X_ACC_Buff: ", X_ACC_Buff)
@@ -222,10 +222,10 @@ async def loop():
 
         #time.sleep(time_interval)
 
-        X_ACC = abs(round(X_Acc_smooth,2))
-        z_rotation += z_Gyro * time_interval + 0.001
+        isAlligned = 0 #abs(round(X_Acc_smooth,2))
+        z_rotation += z_Gyro * time_interval - 0.001
 
-        print("YACC: ", X_ACC)
+        #print("YACC: ", X_ACC)
         #print("my rotation ", z_rotation)
         #print("this my partners Rotation " , MainGalleryCurrentNote)
         #MainGallerySSU.send_message("/GamaSpaceCurrentNote", z_rotation)
@@ -237,13 +237,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 1
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            
-            SC_Control = [myCurrentNote, X_ACC , MainGalleryCurrentNote]
 
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
+                #print("we are alligned")
+                isAlligned = 1
             else: 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
             
@@ -251,13 +253,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 2
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [ myCurrentNote , X_ACC , MainGalleryCurrentNote]
 
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-
+                #print("we are alligned")
+                isAlligned = 1
             else: 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3)) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
 
@@ -265,12 +269,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 3
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
 
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
+                #print("we are alligned")
+                isAlligned = 1
             else: 
-                SuperCollider.send_message("/SC_Control", SC_Control) 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4)) or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
 
@@ -279,12 +286,14 @@ async def loop():
             myCurrentNote = 4
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
 
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
-            
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
+                #print("we are alligned")
+                isAlligned = 1
             else: 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
             
         elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
 
@@ -293,12 +302,14 @@ async def loop():
             myCurrentNote = 5
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
 
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
+            if MainGalleryCurrentNote == myCurrentNote : 
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
             
-            if MainGalleryCurrentNote == myCurrentNote :
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
             
@@ -306,13 +317,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 6
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
-
+        
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7))  or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)):
 
@@ -320,12 +333,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 7
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
-
+            
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)):
 
@@ -333,14 +349,14 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 1
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote ]
-            
-            SuperCollider.send_message("/SC_Control", SC_Control)
-
+        
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control)  
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control) 
         
         elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9))  or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
 
@@ -348,12 +364,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 2
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
+            
 
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
         
         elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)):
 
@@ -361,12 +380,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 3
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
-
+            
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control) 
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
         
         elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)):
 
@@ -374,12 +396,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 4
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
-            
+        
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control) 
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):
 
@@ -387,12 +412,15 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 5
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
             
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control) 
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13)) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)):
 
@@ -400,25 +428,30 @@ async def loop():
             #print("Z_ang = " + str(z_rotation))  
             myCurrentNote = 6
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
-            
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14)) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)):
 
             #print("play Note B")
             #print("Z_ang = " + str(z_rotation))
             myCurrentNote = 7
-            SC_Control = [myCurrentNote , X_ACC , MainGalleryCurrentNote]
             MainGallerySSU.send_message("/GamaSpaceCurrentNote", myCurrentNote)
-            
+    
             if MainGalleryCurrentNote == myCurrentNote : 
-                print("we are alligned")
-            else : 
-                SuperCollider.send_message("/SC_Control", SC_Control)
+                #print("we are alligned")
+                isAlligned = 1
+            else: 
+                isAlligned = 0
+            
+            SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            SuperCollider.send_message("/SC_Control", SC_Control)
         
         await asyncio.sleep(time_interval)  
     

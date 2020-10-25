@@ -46,18 +46,22 @@ SynthDef(\vosc, {
 	Out.ar(out,sig);
 }).add;
 )
+
+
 (
 x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 0]);
 y = Synth(\vosc,[\freq,32.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 1]);
 )
-x.set(\freq,100);
-x.set(\amp ,0.5)
-x.set(\gate, 1)
-x.set(\gate, 0)
-x.set(\filterFreq, 500)
-x.free;
+
+
+(
+y.set(\amp,0.7);
+x.set(\amp ,0.7);
+)
 
 s.freeAll;
+x.free;
+y.free;
 
 
 
@@ -67,18 +71,18 @@ NetAddr(\localhost.asString, 5005);
 OSCdef('SSUListener',{
 	arg msg;
 	//var oldFreq,oldAmp;
-
-
 	x.set(\freq, Scale.major.degreeToFreq(msg[1], 61.midicps, -2));
-	//x.set(\filterFreq, msg[2] * 1000);
-
 	y.set(\freq, Scale.major.degreeToFreq(msg[3], 61.midicps, -2));
 
-	// amp 0 - 1
-	// filter
-
-	//oldFreq = msg[1];
-	//oldAmp = msg[2];
+	if (msg[2] == 1)
+	{
+		y.set(\amp,1.0);
+		x.set(\amp ,1.0);
+	},
+	{
+		y.set(\amp,0.7);
+		x.set(\amp ,0.7);
+	}
 
 },'/SC_Control');
 )

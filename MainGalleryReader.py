@@ -236,7 +236,7 @@ async def loop():
             #print("scale Degree ", myCurrentNote)
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -254,7 +254,7 @@ async def loop():
             #print("scale Degree ", myCurrentNote)
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -272,7 +272,7 @@ async def loop():
             #print("scale Degree ", myCurrentNote)
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
             
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -290,7 +290,7 @@ async def loop():
             #print("scale Degree ", myCurrentNote)
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -307,7 +307,7 @@ async def loop():
             myCurrentNote = 5
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
             
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -324,7 +324,7 @@ async def loop():
             myCurrentNote = 6
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -342,7 +342,7 @@ async def loop():
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
             
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -359,7 +359,7 @@ async def loop():
             myCurrentNote = 1
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)#'C')
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -377,7 +377,7 @@ async def loop():
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
             
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -394,7 +394,7 @@ async def loop():
             myCurrentNote = 3
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)#'E')
         
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -411,7 +411,7 @@ async def loop():
             myCurrentNote = 4
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -428,7 +428,7 @@ async def loop():
             myCurrentNote = 5
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
             
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -445,7 +445,7 @@ async def loop():
             myCurrentNote = 6
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 
@@ -464,7 +464,7 @@ async def loop():
             GammaSpaceSSU.send_message("/MainGalleryCurrentNote", myCurrentNote)
             
 
-            if MainGalleryCurrentNote == myCurrentNote : 
+            if GammaSpcaeCurrentNote == myCurrentNote : 
                 #print("we are alligned")
                 isAlligned = 1
             else: 

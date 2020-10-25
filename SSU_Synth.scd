@@ -14,9 +14,7 @@ s.freqscope;
 		{rrand(-20,20)}!numSegs
 	).asSignal(1024).asWavetable;
 });
-)
 
-(
 ~buf = Buffer.allocConsecutive(4,s,2048);
 ~buf.do({
 	arg buf, i;
@@ -48,10 +46,10 @@ SynthDef(\vosc, {
 	Out.ar(out,sig);
 }).add;
 )
-
+(
 x = Synth(\vosc,[\freq,28.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 0]);
 y = Synth(\vosc,[\freq,32.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 1]);
-
+)
 x.set(\freq,100);
 x.set(\amp ,0.5)
 x.set(\gate, 1)
@@ -72,7 +70,7 @@ OSCdef('SSUListener',{
 
 
 	x.set(\freq, Scale.major.degreeToFreq(msg[1], 61.midicps, -2));
-	x.set(\filterFreq, msg[2] * 1000);
+	//x.set(\filterFreq, msg[2] * 1000);
 
 	y.set(\freq, Scale.major.degreeToFreq(msg[3], 61.midicps, -2));
 

@@ -57,6 +57,8 @@ y = Synth(\vosc,[\freq,32.midicps,\buf, ~buf[0].bufnum, \numBufs,4, \out, 1]);
 (
 y.set(\amp,0.2);
 x.set(\amp,0.6);
+x.set(\filterFreq, 5000)
+y.set(\filterFreq, 5000)
 )
 
 

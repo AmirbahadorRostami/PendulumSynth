@@ -225,8 +225,11 @@ async def loop():
         isAlligned = 0 #abs(round(X_Acc_smooth,2))
         z_rotation += z_Gyro * time_interval - 0.001
 
+        if z_rotation > 17.5 or z_rotation < -17.5 :
+            z_rotation = 0
+
         #print("YACC: ", X_ACC)
-        #print("my rotation ", z_rotation)
+        print("my rotation ", z_rotation)
         #print("this my partners Rotation " , MainGalleryCurrentNote)
         #MainGallerySSU.send_message("/GamaSpaceCurrentNote", z_rotation)
         

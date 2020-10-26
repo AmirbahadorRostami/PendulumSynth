@@ -223,6 +223,11 @@ async def loop():
         #Y_ACC = 0 #abs(round(X_Acc_smooth,2)) #change the varible name to X_ACC
         z_rotation += z_Gyro * time_interval + 0.001
 
+        if z_rotation > 24 or z_rotation < -24:
+            z_rotation = 0
+
+
+
         #print("YACC: ", Y_ACC)
         #print("My rotation ", z_rotation)
         #print("this my partners note " ,GammaSpcaeCurrentNote)

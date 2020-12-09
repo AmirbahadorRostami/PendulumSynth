@@ -229,7 +229,7 @@ async def loop():
 
 
         #print("YACC: ", Y_ACC)
-        #print("My rotation ", z_rotation)
+        print("My rotation ", z_rotation)
         #print("this my partners note " ,GammaSpcaeCurrentNote)
         #GammaSpaceSSU.send_message("/MainGalleryCurrentNote", z_rotation)
         

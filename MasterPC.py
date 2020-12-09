@@ -11,7 +11,7 @@ def InComingRow(*args):
     t = Time.time()
     with open('test.csv', 'a', newline='') as csvfile:
         writer_ = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer_.writerow( [t , args[1] , args[2] , args[3]] )         #(str(t) + str(args[1]) + str(args[2]) + str(args[3]))
+        writer_.writerow( [t , args[1] , args[2] , args[3]] )
     print(args)
 
 MainPC_IP = "192.168.0.10"
@@ -22,7 +22,7 @@ dispatcher.map("/Data", InComingRow)
 
 with open('test.csv', 'a', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(['Time']+['CurrentNote(SSU_1)']+['CurrentNote(SSU_2)']+['isMathced'])
+    writer.writerow(['Time']+['CurrentNote(GammaSpace)']+['isMathced']+['CurrentNote(MainGallery)'])
 
 
 server = osc_server.ThreadingOSCUDPServer((MainPC_IP, MainPC_Port), dispatcher)

@@ -5,12 +5,14 @@ import time as Time
 
 
 
-def InComingRow(args):
-    with open('eggs.csv', 'a', newline='') as csvfile:
-        writer_ = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        writer_.writerow([args])
-    print(args)
+def InComingRow(*args):
 
+    Time.sleep(1.0)
+    t = Time.time()
+    with open('test.csv', 'a', newline='') as csvfile:
+        writer_ = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        writer_.writerow( [t , args[1] , args[2] , args[3]] )         #(str(t) + str(args[1]) + str(args[2]) + str(args[3]))
+    print(args)
 
 MainPC_IP = "192.168.0.10"
 MainPC_Port = 6000
@@ -18,7 +20,7 @@ MainPC_Port = 6000
 dispatcher = dispatcher.Dispatcher()
 dispatcher.map("/Data", InComingRow)
 
-with open('eggs.csv', 'a', newline='') as csvfile:
+with open('test.csv', 'a', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
     writer.writerow(['Time']+['CurrentNote(SSU_1)']+['CurrentNote(SSU_2)']+['isMathced'])
 

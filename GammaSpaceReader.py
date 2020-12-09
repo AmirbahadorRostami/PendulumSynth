@@ -58,7 +58,7 @@ bus = smbus.SMBus(1)
 GamaSpcae_IP = "192.168.0.37"
 GamaSpace_Port = 3000
 
-MainGallery_IP = "192.168.3.17"
+MainGallery_IP = "192.168.0.17"
 MainGallery_Port = 4000
 
 MainPC_IP = "192.168.0.10"

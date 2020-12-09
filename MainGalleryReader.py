@@ -56,10 +56,10 @@ TEMP = 0x41
 bus = smbus.SMBus(1)
 
 
-GamaSpcae_IP = "192.168.0.209"
+GamaSpcae_IP = "192.168.0.37"
 GamaSpace_Port = 3000
 
-MainGallery_IP = "192.168.3.147"
+MainGallery_IP = "192.168.3.17"
 MainGallery_Port = 4000
 
 #MPU Functions
@@ -221,7 +221,7 @@ async def loop():
         #time.sleep(time_interval)
 
         #Y_ACC = 0 #abs(round(X_Acc_smooth,2)) #change the varible name to X_ACC
-        z_rotation += z_Gyro * time_interval + 0.001
+        z_rotation += z_Gyro * time_interval #+ 0.001
 
         if z_rotation > 24 or z_rotation < -24:
             z_rotation = 0

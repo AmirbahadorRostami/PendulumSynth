@@ -55,11 +55,16 @@ GYRO_Z  = 0x47
 TEMP = 0x41
 bus = smbus.SMBus(1)
 
-GamaSpcae_IP = "192.168.0.209"
+GamaSpcae_IP = "192.168.0.37"
 GamaSpace_Port = 3000
 
-MainGallery_IP = "192.168.3.147"
+MainGallery_IP = "192.168.3.17"
 MainGallery_Port = 4000
+
+MainPC_IP = "192.168.0.10"
+MainPC_Port = 6000
+
+
 
 #MPU Functions
 def InitMPU():
@@ -174,12 +179,11 @@ calibrate()
 
 SuperCollider = udp_client.SimpleUDPClient("127.0.0.1" ,5005)
 MainGallerySSU = udp_client.SimpleUDPClient(MainGallery_IP, MainGallery_Port)
+MainPC = udp_client.SimpleUDPClient(MainPC_IP,MainPC_Port)
 
 
 dispatcher = Dispatcher()
 dispatcher.map("/MainGalleryCurrentNote", InComingNote_handler)
-
-
 
 
 time.sleep(1)
@@ -223,7 +227,7 @@ async def loop():
         #time.sleep(time_interval)
 
         isAlligned = 0 #abs(round(X_Acc_smooth,2))
-        z_rotation += z_Gyro * time_interval - 0.001
+        z_rotation += z_Gyro * time_interval #- 0.001
 
         if z_rotation > 17.5 or z_rotation < -17.5 :
             z_rotation = 0
@@ -248,6 +252,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_1) and (z_rotation <= Note_Step_2)) or ((z_rotation < -Note_Step_1) and (z_rotation >= -Note_Step_2)):
@@ -264,6 +269,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_2) and (z_rotation <= Note_Step_3)) or ((z_rotation < -Note_Step_2) and (z_rotation >= -Note_Step_3)):
@@ -280,6 +286,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_3) and (z_rotation <= Note_Step_4)) or ((z_rotation < -Note_Step_3) and (z_rotation >= -Note_Step_4)):
@@ -296,6 +303,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
             
         elif ((z_rotation > Note_Step_4) and (z_rotation <= Note_Step_5)) or ((z_rotation < -Note_Step_4) and (z_rotation >= -Note_Step_5)):
@@ -312,6 +320,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_5) and (z_rotation <= Note_Step_6)) or ((z_rotation < -Note_Step_5) and (z_rotation >= -Note_Step_6)):
@@ -328,6 +337,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_6) and (z_rotation <= Note_Step_7))  or ((z_rotation < -Note_Step_6) and (z_rotation >= -Note_Step_7)):
@@ -344,6 +354,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_7) and (z_rotation <= Note_Step_8)) or ((z_rotation < -Note_Step_7) and (z_rotation >= -Note_Step_8)):
@@ -359,6 +370,7 @@ async def loop():
             else: 
                 isAlligned = 0
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control) 
         
         elif ((z_rotation > Note_Step_8) and (z_rotation <= Note_Step_9))  or ((z_rotation < -Note_Step_8) and (z_rotation >= -Note_Step_9)):
@@ -375,6 +387,7 @@ async def loop():
             else: 
                 isAlligned = 0
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
         
         elif ((z_rotation > Note_Step_9) and (z_rotation <= Note_Step_10)) or ((z_rotation < -Note_Step_9) and (z_rotation >= -Note_Step_10)):
@@ -391,6 +404,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
         
         elif ((z_rotation > Note_Step_10) and (z_rotation <= Note_Step_11)) or ((z_rotation < -Note_Step_10) and (z_rotation >= -Note_Step_11)):
@@ -407,6 +421,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_11) and (z_rotation <= Note_Step_12)) or ((z_rotation < -Note_Step_11) and (z_rotation >= -Note_Step_12)):
@@ -423,6 +438,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_12) and (z_rotation <= Note_Step_13)) or ((z_rotation < -Note_Step_12) and (z_rotation >= -Note_Step_13)):
@@ -438,6 +454,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
 
         elif ((z_rotation > Note_Step_13) and (z_rotation <= Note_Step_14)) or ((z_rotation < -Note_Step_13) and (z_rotation >= -Note_Step_14)):
@@ -454,6 +471,7 @@ async def loop():
                 isAlligned = 0
             
             SC_Control = [myCurrentNote, isAlligned , MainGalleryCurrentNote]
+            MainPC.send_message("/Data",SC_Control)
             SuperCollider.send_message("/SC_Control", SC_Control)
         
         await asyncio.sleep(time_interval)  
